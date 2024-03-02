@@ -28,13 +28,6 @@ app.options("*", cors());
 // compress all responses
 app.use(compression());
 
-// Checkout webhook
-// app.post(
-//   "/webhook-checkout",
-//   express.raw({ type: "application/json" }),
-//   webhookCheckout
-// );
-
 // Middlewares
 app.use(express.json({ limit: "20kb" }));
 app.use(express.static(path.join(__dirname, "uploads")));
@@ -57,7 +50,9 @@ app.use("/api", limiter);
 
 // Mount Routes
 mountRoutes(app);
-
+app.get("/", (req, res) => {
+  res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
+});
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
