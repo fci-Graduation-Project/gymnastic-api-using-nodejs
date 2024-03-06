@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "password required"],
       minlength: [6, "Too short password"],
-      maxlength: [15, "Too short password"],
+      // maxlength: [15, "Too short password"],
     },
 
     role: {
