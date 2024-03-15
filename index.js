@@ -50,9 +50,16 @@ app.use("/api", limiter);
 
 // Mount Routes
 mountRoutes(app);
+
 app.get("/", (req, res) => {
-  res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
+  // Send the image file as response
+  res.sendFile(__dirname + "/uploads/users/IMG_20231214_042821 (2).jpg");
 });
+
+
+// app.get("/", (req, res) => {
+//   res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
+// });
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
