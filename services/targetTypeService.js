@@ -50,7 +50,7 @@ exports.removetarget = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/targetType
 // @access  Protected/sector
 exports.gettargetType = asyncHandler(async (req, res, next) => {
-  const { targetTypeId } = req.params;
+  const targetTypeId = req.params.targetTypeId;
 
   try {
     // Find the sector containing the targetType with the provided ID
@@ -65,11 +65,11 @@ exports.gettargetType = asyncHandler(async (req, res, next) => {
 
     // Find the targetType within the sector
     const targetType = sector.targetType.find(
-      (type) => type._id === targetTypeId
+      (type) => type._id == targetTypeId
     );
 
     if (!targetType) {
-      return new ApiError("Incorrect sectorId", 401);
+      return next(new ApiError("Incorrect targetTypeId", 401));
     }
 
     res.status(200).json({
