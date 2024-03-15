@@ -108,7 +108,7 @@ exports.updateTargetType = asyncHandler(async (req, res, next) => {
   const updateData = { ...req.body };
   await Sector.updateOne(
     { _id: sectorId, "targetType._id": targetTypeId },
-    { $set: { targetType: { updateData } } }
+    { $set: { ["targetType"]: updateData } }
   );
 
   // Retrieve the updated sector
