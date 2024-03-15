@@ -53,7 +53,7 @@ mountRoutes(app);
 
 app.get("/", (req, res) => {
   // Send the image file as response
-  res.sendFile(__dirname + "/uploads/users/IMG_20231214_042821 (2).jpg");
+  res.sendFile(__dirname + "uploads/users/IMG_20231214_042821 (2).jpg");
 });
 
 
