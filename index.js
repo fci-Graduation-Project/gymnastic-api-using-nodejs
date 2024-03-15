@@ -57,9 +57,6 @@ app.get("/", (req, res) => {
 });
 
 
-// app.get("/", (req, res) => {
-//   res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
-// });
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
