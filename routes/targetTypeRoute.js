@@ -5,15 +5,21 @@ const express = require("express");
 const {
   addtarget,
   removetarget,
-  getLoggedsectortargetType,
+  gettargetType,
+  updateTargetType,
 } = require("../services/targetTypeService");
 
 const router = express.Router();
 
 // router.use(authService.protect, authService.allowedTo("user"));
 
-router.route("/").post(addtarget).get(getLoggedsectortargetType);
+router.route("/").post(addtarget);
+router.route("/:targetTypeId").get(gettargetType);
+router
+  .route("/sector/:sectorId/targetType/:targetTypeId")
+  .delete(removetarget)
+  .put(updateTargetType);
+// router.put("/sectors/:sectorId/targetTypes/:targetTypeId", updateTargetType);
 
-router.delete("/:targetId", removetarget);
-
+// router.delete("/", removetarget);
 module.exports = router;
