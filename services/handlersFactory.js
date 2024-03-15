@@ -56,26 +56,17 @@ exports.getOne = (Model, populationOpt) =>
     res.status(200).json({ data: document });
   });
 
-exports.getAll = (Model, modelName = "") =>
+exports.getAll = (Model) =>
   asyncHandler(async (req, res) => {
-    let filter = {};
-    if (req.filterObj) {
-      filter = req.filterObj;
-    }
-    // Build query
-    const documentsCounts = await Model.countDocuments();
-    const apiFeatures = new ApiFeatures(Model.find(filter), req.query)
-      .paginate(documentsCounts)
-      .filter()
-      .search(modelName)
-      .limitFields()
-      .sort();
+    let query = await Model.find(req.query);
 
-    // Execute query
-    const { mongooseQuery, paginationResult } = apiFeatures;
-    const documents = await mongooseQuery;
+    // // Build query
+    // const documentsCounts = await Model.countDocuments();
+    // const apiFeatures = new ApiFeatures(Model.find(filter), req.query)
 
-    res
-      .status(200)
-      .json({ results: documents.length, paginationResult, data: documents });
+    // // Execute query
+    // const { mongooseQuery, paginationResult } = apiFeatures;
+    // const documents = await mongooseQuery;
+
+    res.status(200).json({ data: query });
   });
