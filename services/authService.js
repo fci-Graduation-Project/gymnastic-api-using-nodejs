@@ -194,6 +194,20 @@ exports.verifyPassResetCode = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/auth/resetPassword
 // @access  Public
 exports.resetPassword = asyncHandler(async (req, res, next) => {
+  const passwordRegex =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,}$/;
+
+  // Check if the new password meets the complexity requirements
+  if (!passwordRegex.test(req.body.newPassword)) {
+    return next(
+      new ApiError(
+        `Password must contain at least one lowercase letter,
+      one uppercase letter, one numeric digit, and one special character`,
+        400
+      )
+    );
+  }
+
   // 1) Get user based on email
   const user = await User.findOne({ email: req.body.email });
   if (!user) {

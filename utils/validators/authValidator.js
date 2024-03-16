@@ -33,6 +33,12 @@ exports.signupValidator = [
     .withMessage("Password required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters")
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,}$/)
+    .withMessage(
+      `Password must contain at least one lowercase letter,
+       one uppercase letter, one numeric digit, and one special character`
+    )
+
     .custom((password, { req }) => {
       if (password !== req.body.passwordConfirm) {
         throw new Error("Password Confirmation incorrect");

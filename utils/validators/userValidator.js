@@ -32,6 +32,12 @@ exports.createUserValidator = [
     .withMessage("Password required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters")
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,}$/)
+    .withMessage(
+      `Password must contain at least one lowercase letter,
+       one uppercase letter, one numeric digit, and one special character`
+    )
+
     .custom((password, { req }) => {
       if (password !== req.body.passwordConfirm) {
         throw new Error("Password Confirmation incorrect");
@@ -99,6 +105,12 @@ exports.changeUserPasswordValidator = [
   body("password")
     .notEmpty()
     .withMessage("You must enter new password")
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,}$/)
+    .withMessage(
+      `Password must contain at least one lowercase letter,
+       one uppercase letter, one numeric digit, and one special character`
+    )
+
     .custom(async (val, { req }) => {
       // 1) Verify current password
       const user = await User.findById(req.user._id);
