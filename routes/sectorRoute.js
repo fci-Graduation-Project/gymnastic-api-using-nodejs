@@ -13,6 +13,8 @@ const {
   createSector,
   updateSector,
   deleteSector,
+  uploadSectorImage,
+  resizeImage,
 } = require("../services/sectorService");
 
 const authService = require("../services/authService");
@@ -26,7 +28,9 @@ const router = express.Router();
 
 router.route("/").get(getSectors).post(
   // authService.protect,
-  // authService.allowedTo("admin", "manager"),
+  // authService.allowedTo("admin", "manager")
+  uploadSectorImage,
+  resizeImage,
   createSectorValidator,
   createSector
 );
@@ -34,14 +38,17 @@ router
   .route("/:id")
   .get(getSectorValidator, getSector)
   .put(
-    authService.protect,
-    authService.allowedTo("admin", "manager"),
+    // authService.protect,
+    // authService.allowedTo("admin", "manager"),
+    uploadSectorImage,
+    resizeImage,
     updateSectorValidator,
     updateSector
   )
   .delete(
-    authService.protect,
-    authService.allowedTo("admin"),
+    // authService.protect,
+    // authService.allowedTo("admin"),
+
     deleteSectorValidator,
     deleteSector
   );

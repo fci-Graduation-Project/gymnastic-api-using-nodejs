@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      required: [true, "name required"],
+      // required: [true, "name required"],
     },
     slug: {
       type: String,
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     },
     phone: String,
     profileImg: String,
- passwordChangedAt: Date,
+    passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,
     passwordResetVerified: Boolean,

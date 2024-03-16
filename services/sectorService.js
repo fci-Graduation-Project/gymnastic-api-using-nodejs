@@ -1,6 +1,30 @@
+const sharp = require("sharp");
+const { v4: uuidv4 } = require("uuid");
+const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
+const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const Sector = require("../models/sectorModel");
 
+// Upload single image
+exports.uploadSectorImage = uploadSingleImage("image");
+
+// Image processing
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  const filename = `sector-${uuidv4()}-${Date.now()}.jpeg`;
+
+  if (req.file) {
+    await sharp(req.file.buffer)
+      .resize(600, 600)
+      .toFormat("jpeg")
+      .jpeg({ quality: 95 })
+      .toFile(`uploads/sectors/${filename}`);
+
+    // Save image into our db
+    req.body.image = filename;
+  }
+
+  next();
+});
 // @desc    Get list of sector
 // @route   GET /api/v1/sector
 // @access  Public

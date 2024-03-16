@@ -23,6 +23,8 @@ const sectorSchema = new mongoose.Schema(
       minlength: [2, "Too short target name"],
       maxlength: [32, "Too long target name"],
     },
+    image: String,
+
     exercises: [
       {
         id: { type: mongoose.Schema.Types.ObjectId },

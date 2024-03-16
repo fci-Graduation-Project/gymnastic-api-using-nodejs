@@ -6,8 +6,7 @@ const User = require("../../models/userModel");
 
 exports.createUserValidator = [
   check("name")
-    .notEmpty()
-    .withMessage("User required")
+    .optional()
     .isLength({ min: 3 })
     .withMessage("Too short User name")
     .custom((val, { req }) => {
@@ -98,7 +97,7 @@ exports.changeUserPasswordValidator = [
     .notEmpty()
     .withMessage("You must enter the password confirm"),
   body("password")
-    .notEmpty() 
+    .notEmpty()
     .withMessage("You must enter new password")
     .custom(async (val, { req }) => {
       // 1) Verify current password
@@ -202,6 +201,7 @@ exports.updateLoggedUserValidator = [
       }
       return true;
     }),
+  check("profileImg").optional(),
 
   validatorMiddleware,
 ];

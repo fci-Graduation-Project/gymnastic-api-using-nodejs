@@ -27,7 +27,10 @@ exports.createSectorValidator = [
 
       return true;
     }),
+  check("image")
+    .notEmpty()
 
+    .withMessage("image is required"),
   check("level")
     .notEmpty()
     .withMessage("Level is required")
@@ -45,10 +48,37 @@ exports.createSectorValidator = [
 
 exports.updateSectorValidator = [
   check("id").isMongoId().withMessage("Invalid sector id format"),
-  body("sector")
+  check("sector")
+    .optional()
+    .custom(async (value, { req }) => {
+      // Only validate gender if the role is "user"
+      const existingSector = await SectorModel.findOne({
+        sector: value,
+        level: req.body.level,
+        target: req.body.target,
+      });
+
+      if (existingSector) {
+        throw new Error("this data already exists");
+      }
+      if (
+        !value ||
+        !["Basics", "Flexibility", "Inversion", "Mobility"].includes(value)
+      ) {
+        throw new Error(
+          "sector must be Basics or Flexibility or Inversion or Mobility "
+        );
+      }
+      return true;
+    }),
+  check("level")
     .optional()
     .custom((value, { req }) => {
-      req.body.slug = slugify(value);
+      // Only validate gender if the role is "user"
+
+      if (!value || !["Beginner", "Intermediate", "Advanced"].includes(value)) {
+        throw new Error("level must be Beginner or Intermediate or Advanced ");
+      }
       return true;
     }),
   validatorMiddleware,
