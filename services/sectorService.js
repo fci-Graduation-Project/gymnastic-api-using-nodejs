@@ -1,11 +1,19 @@
-const fs = require("fs");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const Sector = require("../models/sectorModel");
-// a
+const fs = require("fs");
+const path = require("path");
+
+// Function to ensure that the directory exists
+const ensureDirectoryExists = (directory) => {
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+};
+
 // Upload single image
 exports.uploadSectorImage = uploadSingleImage("image");
 
@@ -13,12 +21,16 @@ exports.uploadSectorImage = uploadSingleImage("image");
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `sector-${uuidv4()}-${Date.now()}.jpeg`;
 
+  // Ensure that the directory exists
+  const directory = path.join(__dirname, "..", "uploads", "sectors");
+  ensureDirectoryExists(directory);
+
   if (req.file) {
     await sharp(req.file.buffer)
       .resize(600, 600)
       .toFormat("jpeg")
       .jpeg({ quality: 95 })
-      .toFile(`uploads/sectors/${filename}`);
+      .toFile(path.join(directory, filename));
 
     // Save image into our db
     req.body.image = filename;
