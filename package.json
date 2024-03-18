@@ -1,6 +1,9 @@
 {
   "name": "nodejs-ecommerce-api-v1",
   "version": "1.0.0",
+  "engines": {
+    "node": "20.x"
+  },
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -42,8 +45,5 @@
     "eslint-plugin-react": "^7.28.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
-  },
-  "engines": {
-    "node": "^16.13.0"
   }
 }
