@@ -18,14 +18,14 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 
   if (req.file) {
     // Process the image
-    const resizedImage = await sharp(req.file.buffer)
+    await sharp(req.file.buffer)
       .resize(600, 600)
       .toFormat("jpeg")
       .jpeg({ quality: 95 })
       .toBuffer();
 
     // Write the resized image to file
-    fs.writeFileSync(`uploads/users/${filename}`, resizedImage);
+    fs.writeFileSync(`uploads/users/${filename}`, filename);
 
     // Save image into our db
     req.body.profileImg = filename;
