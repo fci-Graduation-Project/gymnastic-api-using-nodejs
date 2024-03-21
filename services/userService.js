@@ -1,4 +1,3 @@
-const fs = require("fs");
 const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
@@ -13,19 +12,16 @@ const User = require("../models/userModel");
 // Upload single image
 exports.uploadUserImage = uploadSingleImage("profileImg");
 
+// Image processing
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
 
   if (req.file) {
-    // Process the image
     await sharp(req.file.buffer)
       .resize(600, 600)
       .toFormat("jpeg")
       .jpeg({ quality: 95 })
-      .toBuffer();
-
-    // Write the resized image to file
-    fs.writeFileSync(`uploads/users/${filename}`, filename);
+      .toFile(`uploads/users/${filename}`);
 
     // Save image into our db
     req.body.profileImg = filename;
@@ -33,24 +29,6 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 
   next();
 });
-
-// // Image processing
-// exports.resizeImage = asyncHandler(async (req, res, next) => {
-//   const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
-
-//   if (req.file) {
-//     await sharp(req.file.buffer)
-//       .resize(600, 600)
-//       .toFormat("jpeg")
-//       .jpeg({ quality: 95 })
-//       .toFile(`uploads/users/${filename}`);
-
-//     // Save image into our db
-//     req.body.profileImg = filename;
-//   }
-
-//   next();
-// });
 
 // @desc    Get list of users
 // @route   GET /api/v1/users
