@@ -217,3 +217,47 @@ exports.updateLoggedUserValidator = [
 
   validatorMiddleware,
 ];
+
+exports.addFollowingValidator = [
+  body("follow")
+    .isMongoId()
+    .withMessage("following required and must be ObjectId")
+    .custom(async (val, { req }) => {
+      const userExist = await User.findById(val);
+      if (val === req.user._id.toString()) {
+        throw new Error("You can't follow yourself");
+      }
+      if (!userExist) {
+        throw new Error("User not found");
+      }
+      if (userExist.followers.includes(req.user._id)) {
+        throw new Error("You already follow this user");
+      }
+      return true;
+    }),
+  validatorMiddleware,
+];
+exports.removeFollowingValidator = [
+  body("follow")
+    .isMongoId()
+    .withMessage("following required and must be ObjectId")
+    .custom(async (val, { req }) => {
+      const userExist = await User.findById(val);
+      if (val === req.user._id.toString()) {
+        throw new Error("You can't unfollow yourself");
+      }
+      if (!userExist) {
+        throw new Error("User not found");
+      }
+      if (!userExist.followers.includes(req.user._id)) {
+        throw new Error("You not follow this user");
+      }
+      return true;
+    }),
+  validatorMiddleware,
+];
+
+exports.getFollowingValidator = [
+  check("id").isMongoId().withMessage("Invalid User id format"),
+  validatorMiddleware,
+];

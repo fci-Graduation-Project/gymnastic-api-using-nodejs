@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
+const cloudinary = require("cloudinary").v2;
 
 const factory = require("./handlersFactory");
 const ApiError = require("../utils/apiError");
@@ -16,16 +17,31 @@ exports.uploadUserImage = uploadSingleImage("profileImg");
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
 
-  if (req.file) {
-    await sharp(req.file.buffer)
-      .resize(600, 600)
-      .toFormat("jpeg")
-      .jpeg({ quality: 95 })
-      .toFile(`uploads/users/${filename}`);
+  try {
+    // Image processing with Sharp
+    if (req.file) {
+      // const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
+      // Process the image using sharp as before
+      await sharp(req.file.buffer)
+        .resize(600, 600)
+        .toFormat("jpeg")
+        .jpeg({ quality: 95 })
+        .toFile(`uploads/users/${filename}`);
 
-    // Save image into our db
-    req.body.profileImg = filename;
+      // Upload the processed image to Cloudinary
+      const result = await cloudinary.uploader.upload(
+        `uploads/users/${filename}`
+      );
+
+      // Save the Cloudinary URL in your database or use it as needed
+      const cloudinaryUrl = result.secure_url;
+      // console.log("Cloudinary URL:", cloudinaryUrl);
+      req.body.profileImg = cloudinaryUrl;
+    }
+  } catch (err) {
+    next(err);
   }
+  // Save image into our db
 
   next();
 });
@@ -152,4 +168,94 @@ exports.deleteLoggedUserData = asyncHandler(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: false });
 
   res.status(204).json({ status: "Success" });
+});
+
+exports.addFollowers = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.body.follow,
+    { $addToSet: { followers: req.user._id } },
+    { new: true }
+  );
+  await User.findByIdAndUpdate(req.user._id, {
+    $addToSet: { following: req.body.follow },
+  });
+  res.status(200).json({
+    success: "success",
+    following: {
+      _id: user._id,
+      following: user.followers,
+    },
+  });
+});
+
+exports.removeFollowers = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.body.follow,
+    { $pull: { followers: req.user._id } },
+    { new: true }
+  );
+  await User.findByIdAndUpdate(req.user._id, {
+    $pull: { following: req.body.follow },
+  });
+  res.status(200).json({
+    success: "success",
+    following: {
+      _id: user._id,
+      following: user.followers,
+    },
+  });
+});
+
+const getFollowing = async (model, id) => {
+  return await model.findById(id).populate({
+    path: "following",
+    select: "_id email ",
+  });
+};
+
+const getFollowers = async (model, id) => {
+  return await model.findById(id).populate({
+    path: "followers",
+    select: "_id email",
+  });
+};
+
+exports.getFollowingUserById = asyncHandler(async (req, res) => {
+  const user = await getFollowing(User, req.params.id);
+  res.status(200).json({
+    success: "success",
+    count: user.following.length,
+    following: user.following,
+  });
+});
+
+exports.getFollowersUserById = asyncHandler(async (req, res) => {
+  const user = await getFollowers(User, req.params.id);
+  res.status(200).json({
+    success: "success",
+    count: user.followers.length,
+    followers: user.followers,
+  });
+});
+
+exports.getFollowingMe = asyncHandler(async (req, res) => {
+  req.params.id = req.user._id;
+  const user = await getFollowing(User, req.params.id);
+  res.status(200).json({
+    success: "success",
+    count: user.following.length,
+    following: user.following,
+  });
+});
+
+exports.getFollowersMe = asyncHandler(async (req, res) => {
+  req.params.id = req.user._id;
+
+  const user = await getFollowers(User, req.params.id);
+  console.log(user);
+  res.status(200).json({
+    success: "success",
+    count: user.followers.length,
+    followers: user.followers,
+  });
 });

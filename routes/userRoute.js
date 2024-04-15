@@ -6,6 +6,9 @@ const {
   deleteUserValidator,
   changeUserPasswordValidator,
   updateLoggedUserValidator,
+  addFollowingValidator,
+  removeFollowingValidator,
+  getFollowingValidator,
 } = require("../utils/validators/userValidator");
 
 const {
@@ -21,6 +24,12 @@ const {
   updateLoggedUserPassword,
   updateLoggedUserData,
   deleteLoggedUserData,
+  addFollowers,
+  removeFollowers,
+  getFollowersMe,
+  getFollowersUserById,
+  getFollowingMe,
+  getFollowingUserById,
 } = require("../services/userService");
 
 const authService = require("../services/authService");
@@ -45,7 +54,7 @@ router.put(
 router.delete("/deleteMe", deleteLoggedUserData);
 
 // Admin
-router.use(authService.allowedTo("admin", "manager"));
+router.use(authService.allowedTo("admin", "manager", "user"));
 router.put(
   "/changePassword/:id",
 
@@ -60,5 +69,17 @@ router
   .get(getUserValidator, getUser)
   .put(uploadUserImage, resizeImage, updateUserValidator, updateUser)
   .delete(deleteUserValidator, deleteUser);
+
+router.route("/add-follower").patch(addFollowingValidator, addFollowers);
+router
+  .route("/remove-follower")
+  .patch(removeFollowingValidator, removeFollowers);
+router.get("/following/:id", getFollowingUserById);
+
+router.get("/followers/:id", getFollowersUserById);
+
+router.route("/following-me").get(getFollowingValidator, getFollowingMe);
+
+router.get("/followers-me", getFollowingValidator, getFollowersMe);
 
 module.exports = router;

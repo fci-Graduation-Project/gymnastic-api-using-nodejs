@@ -49,6 +49,21 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    following: [
+      {
+        type: mongoose.Schema.ObjectId,
+
+        ref: "User",
+      },
+    ],
+    followers: [
+      {
+        type: mongoose.Schema.ObjectId,
+
+        // type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );

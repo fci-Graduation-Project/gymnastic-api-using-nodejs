@@ -1,5 +1,9 @@
 const path = require("path");
+<<<<<<< HEAD
+const http = require("http");
+=======
 //
+>>>>>>> ee876c36838316acae12c6d2ed1fbb9d4e7e3bb5
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -21,6 +25,7 @@ dbConnection();
 // express app
 const app = express();
 
+const server1 = http.createServer(app);
 // Enable other domains to access your application
 app.use(cors());
 app.options("*", cors());
@@ -70,7 +75,7 @@ app.all("*", (req, res, next) => {
 app.use(globalError);
 
 const PORT = process.env.PORT || 8000;
-const server = app.listen(PORT, () => {
+const server = server1.listen(PORT, () => {
   console.log(`App running running on port ${PORT}`);
 });
 
