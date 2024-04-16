@@ -26,10 +26,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
     },
     phone: String,
-    profileImg: {
-      id: String,
-      url: String,
-    },
+    profileImg: String,
+    // profileImg: {
+    //   url: String,
+    //   publicId: String,
+    // },
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,

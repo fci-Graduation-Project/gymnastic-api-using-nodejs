@@ -13,22 +13,27 @@ cloudinary.config({
 const multerOptions = () => {
   // const multerStorage = multer.memoryStorage();
 
-  const multerFilter = function (req, file, cb) {
-    if (
-      file.mimetype.startsWith("image") ||
-      file.mimetype.startsWith("video")
-    ) {
-      cb(null, true);
-    } else {
-      cb(new ApiError("Only Images allowed", 400), false);
-    }
-  };
+  // const multerFilter = function (req, file, cb) {
+  //   if (
+  //     file.mimetype.startsWith("image") ||
+  //     file.mimetype.startsWith("video")
+  //   ) {
+  //     cb(null, true);
+  //   } else {
+  //     cb(new ApiError("Only Images allowed", 400), false);
+  //   }
+  // };
 
   const upload = multer({
-    //  storage: multerStorage,
-    fileFilter: multerFilter,
+    storage: multer.diskStorage({}), // Use disk storage (default)
+    fileFilter: (req, file, cb) => {
+      // Check file type
+      if (!file.originalname.match(/\.(jpg|jpeg|PNG|png|gif)$/)) {
+        return cb(new Error("Only image files are allowed!"), false);
+      }
+      cb(null, true);
+    },
   });
-
   return upload;
 };
 
