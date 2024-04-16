@@ -1,10 +1,6 @@
-const path = require("path");
-<<<<<<< HEAD
-const http = require("http");
-=======
-//
->>>>>>> ee876c36838316acae12c6d2ed1fbb9d4e7e3bb5
 const express = require("express");
+const http = require("http");
+const path = require("path");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");

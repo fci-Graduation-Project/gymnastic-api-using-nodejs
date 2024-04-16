@@ -26,7 +26,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
     },
     phone: String,
-    profileImg: String,
+    profileImg: {
+      id: String,
+      url: String,
+    },
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,

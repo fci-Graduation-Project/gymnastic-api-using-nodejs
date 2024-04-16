@@ -15,28 +15,31 @@ exports.uploadUserImage = uploadSingleImage("profileImg");
 
 // Image processing
 exports.resizeImage = asyncHandler(async (req, res, next) => {
-  const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
+  // const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
 
   try {
     // Image processing with Sharp
     if (req.file) {
       // const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
       // Process the image using sharp as before
-      await sharp(req.file.buffer)
-        .resize(600, 600)
-        .toFormat("jpeg")
-        .jpeg({ quality: 95 })
-        .toFile(`uploads/users/${filename}`);
-
-      // Upload the processed image to Cloudinary
-      const result = await cloudinary.uploader.upload(
-        `uploads/users/${filename}`
+      // await sharp(req.file.buffer)
+      //   .resize(600, 600)
+      //   .toFormat("jpeg")
+      //   .jpeg({ quality: 95 })
+      //   .toFile(`uploads/users/${filename}`);
+      const { secure_url, public_url } = await cloudinary.uploader.upload(
+        req.file.path
       );
+      // Upload the processed image to Cloudinary
+      // const result = await cloudinary.uploader.upload(
+      //   `uploads/users/${filename}`
+      // );
 
       // Save the Cloudinary URL in your database or use it as needed
-      const cloudinaryUrl = result.secure_url;
+      // const cloudinaryUrl = result.secure_url;
       // console.log("Cloudinary URL:", cloudinaryUrl);
-      req.body.profileImg = cloudinaryUrl;
+      req.body.profileImg.id = secure_url;
+      req.body.profileImg.url = public_url;
     }
   } catch (err) {
     next(err);
