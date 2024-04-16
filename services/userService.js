@@ -16,12 +16,16 @@ exports.uploadUserImage = uploadSingleImage("profileImg");
 // Image processing
 exports.resizeImage = async (req, res, next) => {
   try {
-    // Upload file to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path);
-    console.log(result);
-    req.body.profileImg = result.secure_url;
-    // Return the URL of the uploaded file
-    // res.json({ url: result.secure_url });
+    if (req.file) {
+      // console.log(req.file);
+
+      // Upload file to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+      console.log(result);
+      req.body.profileImg = result.secure_url;
+      // Return the URL of the uploaded file
+      // res.json({ url: result.secure_url });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Something went wrong" });
