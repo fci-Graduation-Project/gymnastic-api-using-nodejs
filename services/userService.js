@@ -10,28 +10,43 @@ const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const createToken = require("../utils/createToken");
 const User = require("../models/userModel");
 
+const getFollowing = async (model, id) =>
+  await model.findById(id).populate({
+    path: "following",
+    select: "_id email ",
+  });
+
+const getFollowers = async (model, id) =>
+  await model.findById(id).populate({
+    path: "followers",
+    select: "_id email",
+  });
 // Upload single image
 exports.uploadUserImage = uploadSingleImage("profileImg");
 
 // Image processing
-exports.resizeImage = async (req, res, next) => {
-  try {
-    if (req.file) {
-      // console.log(req.file);
-
-      // Upload file to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path);
-      console.log(result);
-      req.body.profileImg = result.secure_url;
-      // Return the URL of the uploaded file
-      // res.json({ url: result.secure_url });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  if (req.file) {
+    // console.log(req.file);
+    const transformationOptions = {
+      width: 500,
+      height: 500,
+      format: "auto",
+      quality: 95, // Automatically optimize quality
+    };
+    // Upload file to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      // folder: "uploads/users", // Specify Cloudinary folder
+      transformation: transformationOptions, // Apply transformations
+    });
+    // console.log(result);
+    req.body.profileImg = result.secure_url;
+    // Return the URL of the uploaded file
+    // res.json({ url: result.secure_url });
   }
+
   next();
-};
+});
 
 // @desc    Get list of users
 // @route   GET /api/v1/users
@@ -192,20 +207,6 @@ exports.removeFollowers = asyncHandler(async (req, res) => {
     },
   });
 });
-
-const getFollowing = async (model, id) => {
-  return await model.findById(id).populate({
-    path: "following",
-    select: "_id email ",
-  });
-};
-
-const getFollowers = async (model, id) => {
-  return await model.findById(id).populate({
-    path: "followers",
-    select: "_id email",
-  });
-};
 
 exports.getFollowingUserById = asyncHandler(async (req, res) => {
   const user = await getFollowing(User, req.params.id);

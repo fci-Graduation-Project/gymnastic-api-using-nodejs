@@ -55,8 +55,7 @@ mountRoutes(app);
 app.get("/", (req, res) => {
   // Send the image file as response
   res.sendFile(
-    __dirname +
-      "/uploads/users/user-fdb99ded-0828-4e66-a368-12187bebb073-1710469843782.jpeg"
+    `${__dirname}/uploads/users/user-fdb99ded-0828-4e66-a368-12187bebb073-1710469843782.jpeg`
   );
 });
 
