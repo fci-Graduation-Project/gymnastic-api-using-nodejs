@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 const multerOptions = () => {
-  const multerStorage = multer.memoryStorage();
+  // const multerStorage = multer.memoryStorage();
 
   const multerFilter = function (req, file, cb) {
     if (
@@ -24,7 +24,10 @@ const multerOptions = () => {
     }
   };
 
-  const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+  const upload = multer({
+    //  storage: multerStorage,
+    fileFilter: multerFilter,
+  });
 
   return upload;
 };

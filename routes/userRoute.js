@@ -46,7 +46,7 @@ router.put(
 );
 router.put(
   "/updateMe",
-  // uploadUserImage,
+  uploadUserImage,
   resizeImage,
   updateLoggedUserValidator,
   updateLoggedUserData
