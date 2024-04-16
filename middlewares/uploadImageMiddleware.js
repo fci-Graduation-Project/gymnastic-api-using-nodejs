@@ -17,7 +17,7 @@ const multerOptions = () => {
       // Check file type
       if (!file.mimetype.startsWith("image")) {
         // console.log(req.file);
-        return cb(new Error("Only image files are allowed!"), false);
+        return cb(new ApiError("Only image files are allowed!"), false);
       }
       cb(null, true);
     },

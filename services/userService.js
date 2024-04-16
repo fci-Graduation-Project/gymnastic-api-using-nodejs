@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { v4: uuidv4 } = require("uuid");
+// const { v4: uuidv4 } = require("uuid");
 // const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("cloudinary").v2;
@@ -31,8 +31,10 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     const transformationOptions = {
       width: 500,
       height: 500,
+      crop: "fill",
+      gravity: "auto",
       format: "auto",
-      quality: 95, // Automatically optimize quality
+      quality: "auto", // Automatically optimize quality
     };
     // Upload file to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
