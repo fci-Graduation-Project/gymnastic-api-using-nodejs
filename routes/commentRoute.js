@@ -10,7 +10,7 @@ const authService = require("../services/authService");
 const router = express.Router();
 
 router.use(authService.protect);
-router.use(authService.allowedTo("admin", "manager", "user"));
+router.use(authService.allowedTo("admin", "coach", "user"));
 
 const {
   createComment,

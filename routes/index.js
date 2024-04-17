@@ -1,15 +1,17 @@
 const sectorRoute = require("./sectorRoute");
 const exercisesRoute = require("./exercisesRoute");
 const userRoute = require("./userRoute");
+const reviewRoute = require("./reviewRoute");
 const authRoute = require("./authRoute");
 const postRoute = require("./postRoute");
-const commentRoute = require("./commentRoute.js");
-const repostRoute = require("./repostRoute.js");
+const commentRoute = require("./commentRoute");
+const repostRoute = require("./repostRoute");
 
 const mountRoutes = (app) => {
   app.use("/api/v1/sector", sectorRoute);
   app.use("/api/v1/exercise", exercisesRoute);
   app.use("/api/v1/users", userRoute);
+  app.use("/api/v1/reviews", reviewRoute);
   app.use("/api/v1/auth", authRoute);
   app.use("/api/v1/posts", postRoute);
   app.use("/api/v1/comments", commentRoute);

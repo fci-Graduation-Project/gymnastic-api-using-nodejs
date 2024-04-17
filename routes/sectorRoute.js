@@ -28,7 +28,7 @@ const router = express.Router();
 
 router.route("/").get(getSectors).post(
   // authService.protect,
-  // authService.allowedTo("admin", "manager")
+  // authService.allowedTo("admin", "coach")
   uploadSectorImage,
   resizeImage,
   createSectorValidator,
@@ -39,7 +39,7 @@ router
   .get(getSectorValidator, getSector)
   .put(
     // authService.protect,
-    // authService.allowedTo("admin", "manager"),
+    // authService.allowedTo("admin", "coach"),
     uploadSectorImage,
     resizeImage,
     updateSectorValidator,

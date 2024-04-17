@@ -54,7 +54,7 @@ router.put(
 router.delete("/deleteMe", deleteLoggedUserData);
 
 // Admin
-router.use(authService.allowedTo("admin", "manager", "user"));
+router.use(authService.allowedTo("admin", "coach", "user"));
 router.put(
   "/changePassword/:id",
 

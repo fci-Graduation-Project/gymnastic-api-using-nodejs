@@ -58,7 +58,7 @@ exports.getUsers = factory.getAll(User);
 // @desc    Get specific user by id
 // @route   GET /api/v1/users/:id
 // @access  Private/Admin
-exports.getUser = factory.getOne(User);
+exports.getUser = factory.getOne(User, "reviews");
 
 // @desc    Create user
 // @route   POST  /api/v1/users
