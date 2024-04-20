@@ -18,7 +18,8 @@ const {
   getAllComments,
   getSpecificComment,
   updateComment,
-} = require("../services/commentService.js");
+} = require("../services/commentService");
+
 router.post(
   "/add",
 

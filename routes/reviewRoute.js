@@ -14,20 +14,23 @@ const {
   updateReview,
   deleteReview,
   createFilterObj,
-  setReviewerAndRevieweeIdToBody,
+  setProductIdAndUserIdToBody,
 } = require("../services/reviewService");
 
 const authService = require("../services/authService");
 
 const router = express.Router({ mergeParams: true });
 
-router.route("/").get(createFilterObj, getReviews).post(
-  authService.protect,
-  authService.allowedTo("user"),
-  setReviewerAndRevieweeIdToBody, // Update the middleware name
-  createReviewValidator,
-  createReview
-);
+router
+  .route("/")
+  .get(createFilterObj, getReviews)
+  .post(
+    authService.protect,
+    authService.allowedTo("user"),
+    setProductIdAndUserIdToBody,
+    createReviewValidator,
+    createReview
+  );
 router
   .route("/:id")
   .get(getReviewValidator, getReview)
@@ -39,7 +42,7 @@ router
   )
   .delete(
     authService.protect,
-    authService.allowedTo("user", "coach", "admin"),
+    authService.allowedTo("user", "manager", "admin"),
     deleteReviewValidator,
     deleteReview
   );

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("./userModel");
+const Product = require("./productModel");
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -10,51 +10,54 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       min: [1, "Min ratings value is 1.0"],
       max: [5, "Max ratings value is 5.0"],
-      required: [true, "Review ratings required"],
+      required: [true, "review ratings required"],
     },
-    reviewer: {
+    user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: [true, "Reviewer required"],
+      required: [true, "Review must belong to user"],
     },
-    reviewee: {
+    // parent reference (one to many)
+    product: {
       type: mongoose.Schema.ObjectId,
-      ref: "User",
-      required: [true, "Reviewee required"],
+      ref: "Product",
+      required: [true, "Review must belong to product"],
     },
   },
   { timestamps: true }
 );
 
 reviewSchema.pre(/^find/, function (next) {
-  this.populate({ path: "reviewer", select: "name" });
-  this.populate({ path: "reviewee", select: "name" });
+  this.populate({ path: "user", select: "name" });
   next();
 });
 
-reviewSchema.statics.calcAverageRatingsAndQuantity = async function (userId) {
+reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
+  productId
+) {
   const result = await this.aggregate([
-    // Stage 1 : get all reviews for specific user
+    // Stage 1 : get all reviews in specific product
     {
-      $match: { reviewee: userId },
+      $match: { product: productId },
     },
-    // Stage 2: Grouping reviews based on reviewee and calc avgRatings, ratingsQuantity
+    // Stage 2: Grouping reviews based on productID and calc avgRatings, ratingsQuantity
     {
       $group: {
-        _id: "reviewee",
+        _id: "product",
         avgRatings: { $avg: "$ratings" },
         ratingsQuantity: { $sum: 1 },
       },
     },
   ]);
 
+  // console.log(result);
   if (result.length > 0) {
-    await User.findByIdAndUpdate(userId, {
+    await Product.findByIdAndUpdate(productId, {
       ratingsAverage: result[0].avgRatings,
       ratingsQuantity: result[0].ratingsQuantity,
     });
   } else {
-    await User.findByIdAndUpdate(userId, {
+    await Product.findByIdAndUpdate(productId, {
       ratingsAverage: 0,
       ratingsQuantity: 0,
     });
@@ -62,11 +65,11 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (userId) {
 };
 
 reviewSchema.post("save", async function () {
-  await this.constructor.calcAverageRatingsAndQuantity(this.reviewee);
+  await this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 
 reviewSchema.post("remove", async function () {
-  await this.constructor.calcAverageRatingsAndQuantity(this.reviewee);
+  await this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 
 module.exports = mongoose.model("Review", reviewSchema);

@@ -6,31 +6,32 @@ const authRoute = require("./authRoute");
 const postRoute = require("./postRoute");
 const commentRoute = require("./commentRoute");
 const repostRoute = require("./repostRoute");
+const categoryRoute = require("./categoryRoute");
+const productRoute = require("./productRoute");
+const reviewCoachRoute = require("./reviewCoachRoute");
+const wishlistRoute = require("./wishlistRoute");
+const couponRoute = require("./couponRoute");
+const cartRoute = require("./cartRoute");
+const orderRoute = require("./orderRoute");
 
 const mountRoutes = (app) => {
   app.use("/api/v1/sector", sectorRoute);
   app.use("/api/v1/exercise", exercisesRoute);
   app.use("/api/v1/users", userRoute);
-  app.use("/api/v1/reviews", reviewRoute);
+  app.use("/api/v1/reviewCoach", reviewCoachRoute);
   app.use("/api/v1/auth", authRoute);
   app.use("/api/v1/posts", postRoute);
   app.use("/api/v1/comments", commentRoute);
   app.use("/api/v1/reposts", repostRoute);
+  app.use("/api/v1/categories", categoryRoute);
+  app.use("/api/v1/products", productRoute);
+  app.use("/api/v1/reviews", reviewRoute);
+  app.use("/api/v1/wishlist", wishlistRoute);
+  app.use("/api/v1/coupons", couponRoute);
+  app.use("/api/v1/cart", cartRoute);
+  app.use("/api/v1/orders", orderRoute);
 };
 
 module.exports = mountRoutes;
 
-// const authRoute = require('./auth.route.js');
-// const postRoute = require('./post.route.js');
-// const commentRoute = require('./comment.route.js');
-// const chatRoute = require('./chat.route.js');
-// const repostRoute = require('./repost.route.js');
-// const userRoute = require('./user.route.js');
-
-// module.exports = (app) => {
-//   app.use('/api/v1/auth', authRoute);
-//   app.use('/api/v1/posts', postRoute);
-//   app.use('/api/v1/comments', commentRoute);
-//   app.use('/api/v1/chats', chatRoute);
-//   app.use('/api/v1/reposts', repostRoute);
-//   app.use('/api/v1/users',
+//
