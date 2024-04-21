@@ -30,6 +30,7 @@ const {
   getFollowersUserById,
   getFollowingMe,
   getFollowingUserById,
+  updateUsertoCoach,
 } = require("../services/userService");
 
 const authService = require("../services/authService");
@@ -68,9 +69,11 @@ router
   .route("/:id")
   .get(getUserValidator, getUser)
   .put(uploadUserImage, resizeImage, updateUserValidator, updateUser)
+
   .delete(deleteUserValidator, deleteUser);
 
 router.route("/add-follower").patch(addFollowingValidator, addFollowers);
+router.route("/:id/toCoach").put(updateUsertoCoach);
 router
   .route("/remove-follower")
   .patch(removeFollowingValidator, removeFollowers);

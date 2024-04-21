@@ -9,6 +9,7 @@ const ApiError = require("../utils/apiError");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const createToken = require("../utils/createToken");
 const User = require("../models/userModel");
+const coachCV = require("../models/coachCVModel");
 
 const getFollowing = async (model, id) =>
   await model.findById(id).populate({
@@ -38,7 +39,8 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     };
     // Upload file to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
-      // folder: "uploads/users", // Specify Cloudinary folder
+      folder: "gymnastic/users", // Specify Cloudinary folder
+      // resource_type: "video", // Specify resource type as "video"
       transformation: transformationOptions, // Apply transformations
     });
     // console.log(result);
@@ -248,4 +250,32 @@ exports.getFollowersMe = asyncHandler(async (req, res) => {
     count: user.followers.length,
     followers: user.followers,
   });
+});
+
+exports.updateUsertoCoach = asyncHandler(async (req, res, next) => {
+  // Find the coach CV document for the user
+  const CV = await coachCV.findOne(req.params.user);
+  if (CV) {
+    const updatedCoach = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        experience_years: CV.experience_years,
+        certifications: CV.certifications,
+        medals: CV.medals,
+      },
+      { new: true }
+    );
+
+    // Send a success response with the updated user document
+    await coachCV.findOneAndDelete(req.params.user);
+
+    console.log(updatedCoach);
+    res.status(200).json({
+      success: "success",
+      updatedCoach,
+    });
+  } else {
+    return next(new ApiError("Coach CV not found", 404));
+  }
+  // Update the user document with coach CV details
 });

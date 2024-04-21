@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
     },
     phone: String,
-    profileImg: String,
-    // profileImg: {
-    //   url: String,
-    //   publicId: String,
-    // },
+    // profileImg: String,
+    profileImg: {
+      url: String,
+      publicId: String,
+    },
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       //coach
-      enum: ["user", "coach", "admin"],
+      enum: ["user", "coach", "manager", "admin"],
       default: "user",
     },
     active: {
@@ -82,6 +82,16 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "Product",
+      },
+    ],
+    experience_years: Number,
+    certifications: [String],
+    medals: [
+      {
+        event: String,
+        competition: String,
+        medal_type: String,
+        date: Date,
       },
     ],
   },

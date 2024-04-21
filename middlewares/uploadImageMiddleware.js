@@ -5,9 +5,9 @@ const ApiError = require("../utils/apiError");
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: "darw3b55s",
-  api_key: "839626653447746",
-  api_secret: "Z4BM3iCLVWDpu4kFi8zMqfzIQJg",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_Key,
+  api_secret: process.env.API_Secret,
 });
 
 const multerOptions = () => {

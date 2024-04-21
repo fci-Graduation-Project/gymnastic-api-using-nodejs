@@ -36,7 +36,7 @@ postSchema.pre(/^find/, function (next) {
   next();
 });
 
-postSchema.post("aggregate", async function (doc, next) {
+postSchema.post("aggregate", async (doc, next) => {
   await Promise.all(
     doc.map(async (post) => {
       await Promise.all(
