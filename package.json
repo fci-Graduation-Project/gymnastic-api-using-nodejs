@@ -1,7 +1,6 @@
 {
-  "name": "nodejs-ecommerce-api-v1",
+  "name": "gymnastic",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon index.js",
@@ -47,5 +46,6 @@
   },
   "engines": {
     "node": "^18.17.1"
-  }
+  },
+  "description": ""
 }
