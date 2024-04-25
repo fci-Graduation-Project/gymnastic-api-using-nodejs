@@ -15,15 +15,14 @@ const dbConnection = require("./config/database");
 const mountRoutes = require("./routes");
 const { webhookCheckout } = require("./services/orderService");
 
+const { app, server } = require('./socket/socket')
+
+
 // const { webhookCheckout } = require('./services/orderService');
 
 // Connect with db
 dbConnection();
 
-// express app
-const app = express();
-
-const server1 = http.createServer(app);
 // Enable other domains to access your application
 app.use(cors());
 app.options("*", cors());
@@ -67,9 +66,7 @@ app.get("/", (req, res) => {
   );
 });
 
-// app.get("/", (req, res) => {
-//   res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
-// });
+
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
@@ -78,7 +75,7 @@ app.all("*", (req, res, next) => {
 app.use(globalError);
 
 const PORT = process.env.PORT || 8000;
-const server = server1.listen(PORT, () => {
+ server.listen(PORT, () => {
   console.log(`App running running on port ${PORT}`);
 });
 
