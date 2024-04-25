@@ -5,7 +5,7 @@ const Post = require("../models/postModel");
 const Comment = require("../models/commentModel");
 const { setPagination } = require("../utils/pagination");
 const {
-  uploadSingleImage,
+  // uploadSingleImage,
   uploadMixOfImages,
 } = require("../middlewares/uploadImageMiddleware");
 
