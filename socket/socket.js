@@ -1,11 +1,11 @@
-import Message from "../models/message.model.js";
-import Conversation from "../models/conversation.model.js";
+const Message = require("../models/chat/message.model.js");
+const Conversation = require("../models/chat/conversation.model.js");
 
-import { Server } from "socket.io";
-import http from "http";
-import express from "express";
+const { Server } = require("socket.io");
+const http = require("http");
+const express = require("express");
 
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const server = http.createServer(app);
@@ -152,4 +152,8 @@ io.on("connection", async (socket) => {
   });
 });
 
-export { app, io, server };
+module.exports = {
+  app,
+  io,
+  server,
+};
