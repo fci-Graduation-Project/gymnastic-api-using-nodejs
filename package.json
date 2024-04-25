@@ -45,7 +45,7 @@
     "prettier": "^2.5.1"
   },
   "engines": {
-    "node": "^18.17.1"
+    "node": "^20.12.2"
   },
   "description": ""
 }

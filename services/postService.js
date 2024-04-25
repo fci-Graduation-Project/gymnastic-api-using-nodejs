@@ -1,10 +1,71 @@
+const cloudinary = require("cloudinary").v2;
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const Post = require("../models/postModel");
 const Comment = require("../models/commentModel");
 const { setPagination } = require("../utils/pagination");
+const {
+  uploadSingleImage,
+  uploadMixOfImages,
+} = require("../middlewares/uploadImageMiddleware");
 
 const User = require("../models/userModel");
+
+// const uploadUserImage = uploadSingleImage("video");
+// Middleware to upload multiple images
+const uploadUserImage = uploadMixOfImages([
+  {
+    name: "video",
+    maxCount: 5, // Adjust as needed
+  },
+]);
+
+// Middleware to resize uploaded images
+const resizeImage = asyncHandler(async (req, res, next) => {
+  if (!req.files || !req.files.video) {
+    return next(new ApiError("No video files provided", 400));
+  }
+
+  req.body.video = [];
+
+  await Promise.all(
+    req.files.video.map(async (file) => {
+      try {
+        const result = await cloudinary.uploader.upload(file.path, {
+          resource_type: "video",
+          folder: "gymnastic/postsVideo", // Specify Cloudinary folder
+          // Apply transformations if needed
+        });
+
+        req.body.video.push({
+          publicId: result.public_id,
+          url: result.secure_url,
+        });
+      } catch (error) {
+        console.error("Error uploading video:", error);
+        return next(new ApiError("Failed to upload video", 500));
+      }
+    })
+  );
+
+  next();
+});
+
+//   req.body.video = [];
+//   // Upload file to Cloudinary
+//   const result = await cloudinary.uploader.upload(req.file.path, {
+//     resource_type: "video",
+//     folder: "gymnastic/postsVideo", // Specify Cloudinary folder
+//     // resource_type: "video", // Specify resource type as "video"
+//     // transformation: transformationOptions, // Apply transformations
+//   });
+//   // eslint-disable-next-line camelcase
+//   const { public_id, secure_url } = result;
+//   // console.log(result);
+//   // eslint-disable-next-line camelcase
+//   req.body.video.push({ publicId: public_id, url: secure_url });
+//   // req.body.images.push(imageName);
+// }
 
 const createPost = asyncHandler(async (req, res) => {
   const { text, image, video } = req.body;
@@ -172,7 +233,7 @@ const getAllLikes = asyncHandler(async (req, res) => {
     path: "likes",
     select: "firstName lastName image",
   });
-  if (!post) throw new NotFound("Post not found");
+  if (!post) throw new ApiError("Post not found");
   res.status(200).json({
     status: "success",
     likes: post.likes,
@@ -189,4 +250,6 @@ module.exports = {
   addLike,
   removeLike,
   getAllLikes,
+  resizeImage,
+  uploadUserImage,
 };

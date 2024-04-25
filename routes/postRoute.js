@@ -16,6 +16,8 @@ const express = require("express");
 
 const {
   addLike,
+  resizeImage,
+  uploadUserImage,
   createPost,
   deletePost,
   getAllLikes,
@@ -36,6 +38,8 @@ router.post(
   "/add",
   authService.protect,
   authService.allowedTo("user"),
+  uploadUserImage,
+  resizeImage,
   createPost
 );
 

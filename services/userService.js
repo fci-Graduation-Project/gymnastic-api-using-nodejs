@@ -4,9 +4,9 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("cloudinary").v2;
 
+const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const factory = require("./handlersFactory");
 const ApiError = require("../utils/apiError");
-const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const createToken = require("../utils/createToken");
 const User = require("../models/userModel");
 const coachCV = require("../models/coachCVModel");
@@ -39,14 +39,16 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     };
     // Upload file to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "auto",
       folder: "gymnastic/users", // Specify Cloudinary folder
       // resource_type: "video", // Specify resource type as "video"
       transformation: transformationOptions, // Apply transformations
     });
+    // eslint-disable-next-line camelcase
+    const { public_id, secure_url } = result;
     // console.log(result);
-    req.body.profileImg = result.secure_url;
-    // Return the URL of the uploaded file
-    // res.json({ url: result.secure_url });
+    // eslint-disable-next-line camelcase
+    req.body.profileImg = { publicId: public_id, url: secure_url };
   }
 
   next();

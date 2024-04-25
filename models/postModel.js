@@ -8,7 +8,12 @@ const postSchema = new mongoose.Schema(
       required: [true, "text required"],
     },
     image: String,
-    video: String,
+    video: [
+      {
+        url: String,
+        publicId: String,
+      },
+    ],
     likes: [
       {
         type: mongoose.Schema.ObjectId,
