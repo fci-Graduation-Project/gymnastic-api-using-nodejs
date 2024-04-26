@@ -7,6 +7,7 @@ const postRoute = require("./postRoute");
 const commentRoute = require("./commentRoute");
 const repostRoute = require("./repostRoute");
 const categoryRoute = require("./categoryRoute");
+const brandRoute = require("./brandRoute");
 const productRoute = require("./productRoute");
 const reviewCoachRoute = require("./reviewCoachRoute");
 const wishlistRoute = require("./wishlistRoute");
@@ -25,6 +26,7 @@ const mountRoutes = (app) => {
   app.use("/api/v1/comments", commentRoute);
   app.use("/api/v1/reposts", repostRoute);
   app.use("/api/v1/categories", categoryRoute);
+  app.use("/api/v1/brands", brandRoute);
   app.use("/api/v1/products", productRoute);
   app.use("/api/v1/reviews", reviewRoute);
   app.use("/api/v1/wishlist", wishlistRoute);
