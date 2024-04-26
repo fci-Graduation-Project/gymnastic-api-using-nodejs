@@ -69,6 +69,7 @@ exports.createProductValidator = [
         }
       })
     ),
+  check("brand").optional().isMongoId().withMessage("Invalid ID formate"),
 
   check("ratingsAverage")
     .optional()
