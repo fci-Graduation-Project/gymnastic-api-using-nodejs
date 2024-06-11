@@ -1,7 +1,7 @@
 const slugify = require("slugify");
 const { check, body } = require("express-validator");
 const validatorMiddleware = require("../../middlewares/validatorMiddleware");
-const SectorModel = require("../../models/sectorModel");
+const SectorModel = require("../../models/category-exercisesModel");
 
 exports.getSectorValidator = [
   check("id").isMongoId().withMessage("Invalid sector id format"),

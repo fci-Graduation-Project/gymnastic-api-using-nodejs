@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
-const Sector = require("../models/sectorModel");
+const Sector = require("../models/category-exercisesModel");
 
 // Upload single image
 exports.uploadSectorImage = uploadSingleImage("image");

@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 
-const Sector = require("../models/sectorModel");
+const Sector = require("../models/category-exercisesModel");
 
 // @desc    Add exercises to sector exercises list
 // @route   POST /api/v1/exercises
