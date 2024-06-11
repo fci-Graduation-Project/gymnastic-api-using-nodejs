@@ -62,13 +62,9 @@ mountRoutes(app);
 //nnn
 app.get("/", (req, res) => {
   // Send the image file as response
-<<<<<<< HEAD:index.js
   res.sendFile(
     `${__dirname}/uploads/users/user-fdb99ded-0828-4e66-a368-12187bebb073-1710469843782.jpeg`
   );
-=======
-  res.sendFile(__dirname + "/uploads/users/IMG_20231214_042821 (2).jpg");
->>>>>>> 6eae632b715919a20600d6fa6381bd704814ba7a:server.js
 });
 
 // app.get("/", (req, res) => {

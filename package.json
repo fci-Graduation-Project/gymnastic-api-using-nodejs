@@ -15,13 +15,8 @@
     "colors": "^1.4.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
-<<<<<<< HEAD
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-=======
-    "dotenv": "^10.0.0",
-    "express": "^4.18.3",
->>>>>>> 6eae632b715919a20600d6fa6381bd704814ba7a
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.2.0",
     "express-validator": "^7.0.1",
