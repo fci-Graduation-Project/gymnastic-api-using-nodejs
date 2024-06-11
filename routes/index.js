@@ -1,4 +1,4 @@
-const sectorRoute = require("./sectorRoute");
+const categoryExercises = require("./category-exercisesRoute");
 const exercisesRoute = require("./exercisesRoute");
 const userRoute = require("./userRoute");
 const reviewRoute = require("./reviewRoute");
@@ -17,7 +17,7 @@ const orderRoute = require("./orderRoute");
 const coachCVRoute = require("./coachCVRoute");
 
 const mountRoutes = (app) => {
-  app.use("/api/v1/sector", sectorRoute);
+  app.use("/api/v1/category-exercises", categoryExercises);
   app.use("/api/v1/exercise", exercisesRoute);
   app.use("/api/v1/users", userRoute);
   app.use("/api/v1/reviewCoach", reviewCoachRoute);

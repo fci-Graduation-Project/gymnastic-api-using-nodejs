@@ -8,10 +8,10 @@ const Sector = require("../models/sectorModel");
 // @access  Protected/sector
 exports.addexercises = asyncHandler(async (req, res, next) => {
   // $addToSet => add exercises object to sector exercises  array if exercises not exist
-  const { sectorId, exercises } = req.body;
+  const { exerciseId, exercises } = req.body;
 
   const sector = await Sector.findByIdAndUpdate(
-    sectorId,
+    exerciseId,
     {
       $addToSet: { exercises },
     },
@@ -25,15 +25,15 @@ exports.addexercises = asyncHandler(async (req, res, next) => {
 });
 
 exports.removeexercises = asyncHandler(async (req, res, next) => {
-  const { sectorId, exercisesId } = req.params; // Retrieve from request parameters
-  const sector1 = await Sector.findById(sectorId);
+  const { exerciseId, exercisesId } = req.params; // Retrieve from request parameters
+  const sector1 = await Sector.findById(exerciseId);
 
   if (!sector1) {
     return next(new ApiError("Incorrect sectorId", 401));
   }
   // $pull => remove exercises object from sector exercises array if exercisesId exist
   const sector = await Sector.findByIdAndUpdate(
-    sectorId,
+    exerciseId,
     {
       $pull: { exercises: { _id: exercisesId } },
     },
@@ -85,9 +85,9 @@ exports.getexercises = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateexercises = asyncHandler(async (req, res, next) => {
-  const { sectorId, exercisesId } = req.params; // Retrieve from request parameters
+  const { exerciseId, exercisesId } = req.params; // Retrieve from request parameters
 
-  const sector = await Sector.findById(sectorId);
+  const sector = await Sector.findById(exerciseId);
 
   if (!sector) {
     return next(new ApiError("Incorrect sectorId", 401));
@@ -105,12 +105,12 @@ exports.updateexercises = asyncHandler(async (req, res, next) => {
   // Update the exercises type with the provided data using $set and req.body
   const updateData = { ...req.body };
   await Sector.updateOne(
-    { _id: sectorId, "exercises._id": exercisesId },
+    { _id: exerciseId, "exercises._id": exercisesId },
     { $set: { ["exercises"]: updateData } }
   );
 
   // Retrieve the updated sector
-  const updatedSector = await Sector.findById(sectorId);
+  const updatedSector = await Sector.findById(exerciseId);
 
   // Return the updated exercises type
   res.status(200).json({

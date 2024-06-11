@@ -28,9 +28,10 @@ exports.createSectorValidator = [
       return true;
     }),
   check("image")
-    .notEmpty()
+    // .notEmpty()
+    .optional(),
 
-    .withMessage("image is required"),
+  // .withMessage("image is required"),
   check("level")
     .notEmpty()
     .withMessage("Level is required")
