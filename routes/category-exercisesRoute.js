@@ -5,7 +5,7 @@ const {
   createSectorValidator,
   updateSectorValidator,
   deleteSectorValidator,
-} = require("../utils/validators/sectorValidator");
+} = require("../utils/validators/category-exercisesValidator");
 
 const {
   getSectors,
@@ -15,7 +15,7 @@ const {
   deleteSector,
   uploadSectorImage,
   resizeImage,
-} = require("../services/sectorService");
+} = require("../services/category-exercisesService");
 
 const authService = require("../services/authService");
 

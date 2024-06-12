@@ -158,7 +158,7 @@ exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
       email: req.body.email,
       phone: req.body.phone,
       age: req.body.age,
-      // profileImg: req.body.profileImg,
+      profileImg: req.body.profileImg,
       weight: req.body.weight,
       height: req.body.height,
       gender: req.body.gender,
