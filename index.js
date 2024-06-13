@@ -60,16 +60,16 @@ app.use("/api", limiter);
 // Mount Routes
 mountRoutes(app);
 //nnn
-app.get("/", (req, res) => {
-  // Send the image file as response
-  res.sendFile(
-    `${__dirname}/uploads/users/user-fdb99ded-0828-4e66-a368-12187bebb073-1710469843782.jpeg`
-  );
-});
-
 // app.get("/", (req, res) => {
-//   res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
+//   // Send the image file as response
+//   res.sendFile(
+//     `${__dirname}/uploads/users/user-fdb99ded-0828-4e66-a368-12187bebb073-1710469843782.jpeg`
+//   );
 // });
+
+app.get("/", (req, res) => {
+  res.send("<h1>صلي علي النبي كدا</br></br> 😎😂 متجيش عشان مفيش الالا </h1>");
+});
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
