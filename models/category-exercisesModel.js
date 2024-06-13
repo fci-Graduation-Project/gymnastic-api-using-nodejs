@@ -5,14 +5,14 @@ const sectorSchema = new mongoose.Schema(
   {
     sector: {
       type: String,
-      enum: ["Basics", "Flexibility", "Inversion", "Mobility"],
+      // enum: ["Basics", "Flexibility", "Inversion", "Mobility"],
       required: [true, "Sector is required"],
       minlength: [2, "Too short sector name"],
       maxlength: [32, "Too long sector name"],
     },
     level: {
       type: String,
-      enum: ["Beginner", "Intermediate", "Advanced"],
+      // enum: ["Beginner", "Intermediate", "Advanced"],
       required: [true, "Level is required"],
       minlength: [2, "Too short level name"],
       maxlength: [32, "Too long level name"],

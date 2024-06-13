@@ -62,30 +62,15 @@ exports.updateSectorValidator = [
       if (existingSector) {
         throw new Error("this data already exists");
       }
-      if (
-        !value ||
-        !["Basics", "Flexibility", "Inversion", "Mobility"].includes(value)
-      ) {
-        throw new Error(
-          "sector must be Basics or Flexibility or Inversion or Mobility "
-        );
-      }
       return true;
     }),
   check("level")
-    .optional()
-    .custom((value, { req }) => {
-      // Only validate gender if the role is "user"
-
-      if (!value || !["Beginner", "Intermediate", "Advanced"].includes(value)) {
-        throw new Error("level must be Beginner or Intermediate or Advanced ");
-      }
-      return true;
-    }),
-  validatorMiddleware,
+    .optional(),
+     validatorMiddleware,
 ];
 
 exports.deleteSectorValidator = [
   check("id").isMongoId().withMessage("Invalid sector id format"),
   validatorMiddleware,
 ];
+ 
