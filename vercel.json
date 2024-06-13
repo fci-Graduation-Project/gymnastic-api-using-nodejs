@@ -2,11 +2,8 @@
   "version": 2,
   "builds": [
     {
-<<<<<<< HEAD
       "src": "./index.js",
-=======
       "src": "./server.js",
->>>>>>> 6eae632b715919a20600d6fa6381bd704814ba7a
       "use": "@vercel/node"
     }
   ],
