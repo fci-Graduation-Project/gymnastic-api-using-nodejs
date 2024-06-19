@@ -34,6 +34,7 @@ const sectorSchema = new mongoose.Schema(
         count: Number,
         time: Number,
         image: String,
+        animationUrl: String,
         videoUrl: String,
         description: String,
         focusArea: [String],
