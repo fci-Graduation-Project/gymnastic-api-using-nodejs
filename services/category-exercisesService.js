@@ -1,30 +1,33 @@
-const sharp = require("sharp");
-const { v4: uuidv4 } = require("uuid");
-const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
+const asyncHandler = require("express-async-handler");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
+const cloudinary = require("cloudinary").v2;
 const Sector = require("../models/category-exercisesModel");
 
-// Upload single image
 exports.uploadSectorImage = uploadSingleImage("image");
 
-// Image processing
 exports.resizeImage = asyncHandler(async (req, res, next) => {
-  const filename = `sector-${uuidv4()}-${Date.now()}.jpeg`;
-
   if (req.file) {
-    await sharp(req.file.buffer)
-      .resize(600, 600)
-      .toFormat("jpeg")
-      .jpeg({ quality: 95 })
-      .toFile(`uploads/sectors/${filename}`);
-
-    // Save image into our db
-    req.body.image = filename;
+    const transformationOptions = {
+      width: 500,
+      height: 500,
+      crop: "fill",
+      gravity: "auto",
+      format: "auto",
+      quality: "auto",
+    };
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "auto",
+      folder: "gymnastic/sectorexercise",
+      transformation: transformationOptions,
+    });
+    const { public_id, secure_url } = result;
+    req.body.image = { publicId: public_id, url: secure_url };
+    console.log(req.file);
   }
-
   next();
 });
+
 // @desc    Get list of sector
 // @route   GET /api/v1/sector
 // @access  Public

@@ -64,13 +64,11 @@ exports.updateSectorValidator = [
       }
       return true;
     }),
-  check("level")
-    .optional(),
-     validatorMiddleware,
+  check("level").optional(),
+  validatorMiddleware,
 ];
 
 exports.deleteSectorValidator = [
   check("id").isMongoId().withMessage("Invalid sector id format"),
   validatorMiddleware,
 ];
- 
