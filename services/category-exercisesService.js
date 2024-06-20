@@ -33,6 +33,19 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 // @access  Public
 exports.getSectors = factory.getAll(Sector);
 
+exports.getOnlySectors = asyncHandler(async (req, res, next) => {
+  // Build query to select only specific fields
+  const query = Sector.find({}).select("sector level image target");
+
+  // Execute query
+  const documents = await query;
+
+  if (!documents) {
+    return next(new ApiError("No documents found", 404));
+  }
+
+  res.status(200).json({ data: documents });
+});
 // @desc    Get specific Sector by id
 // @route   GET /api/v1/sector/:id
 // @access  Public

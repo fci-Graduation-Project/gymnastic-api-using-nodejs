@@ -13,12 +13,14 @@ const reviewCoachRoute = require("./reviewCoachRoute");
 const wishlistRoute = require("./wishlistRoute");
 const couponRoute = require("./couponRoute");
 const cartRoute = require("./cartRoute");
+const privateCourseRoute = require("./privateCourseRoute");
 const orderRoute = require("./orderRoute");
 const coachCVRoute = require("./coachCVRoute");
 
 const mountRoutes = (app) => {
   app.use("/api/v1/category-exercises", categoryExercises);
   app.use("/api/v1/exercise", exercisesRoute);
+  app.use("/api/v1/privateExercise", privateCourseRoute);
   app.use("/api/v1/users", userRoute);
   app.use("/api/v1/reviewCoach", reviewCoachRoute);
   app.use("/api/v1/auth", authRoute);

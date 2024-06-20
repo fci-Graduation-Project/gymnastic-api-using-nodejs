@@ -10,6 +10,7 @@ const {
 const {
   getSectors,
   getSector,
+  getOnlySectors,
   createSector,
   updateSector,
   deleteSector,
@@ -34,6 +35,8 @@ router.route("/").get(getSectors).post(
   createSectorValidator,
   createSector
 );
+
+router.route("/onlySector").get(getOnlySectors);
 router
   .route("/:id")
   .get(getSectorValidator, getSector)
