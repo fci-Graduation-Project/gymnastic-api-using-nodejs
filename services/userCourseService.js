@@ -221,7 +221,7 @@ const addUserToCoach = async (session) => {
   console.log(user);
 
   exercise.Trainees.push(user._id);
-  await coach.save();
+  await exercise.save();
 
   console.log(coach.Trainees.push(user._id));
 };
