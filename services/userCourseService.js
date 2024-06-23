@@ -220,12 +220,13 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 
 const addUserToCoach = async (session) => {
   const exerciseId = session.client_reference_id;
-  const exercise = await User.findById(exerciseId.coach);
+  const exercise = await User.findById(exerciseId);
+  const coach = await User.findById(exercise.coach);
   const user = await User.findOne({ email: session.customer_email });
   console.log(exercise);
+  console.log(coach);
   console.log(user);
-
-  exercise.Trainees.push({ user });
+  coach.Trainees.push({ user });
   await exercise.save();
 
   console.log(coach.Trainees.push({ user }));
