@@ -215,7 +215,9 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 
 const addUserToCoach = async (session) => {
   const coach = await User.findById(exercise.coach);
+  const user = await User.findOne(session.customer_email);
   console.log(coach);
+  console.log(user);
 
   coach.Trainees.push(session.client_reference_id);
   await coach.save();
