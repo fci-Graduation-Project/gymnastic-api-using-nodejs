@@ -35,21 +35,14 @@ app.use(compression());
 app.post(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
-  (req, res, next) => {
-    // Example condition: Check if a specific header or parameter exists
-    if (req.headers["x-webhook-type"] === "checkout") {
-      webhookCheckout(req, res, next); // Use webhookCheckout if header is 'checkout'
-    } else {
-      webhookCheckouts(req, res, next); // Use webhookCheckouts for other cases
-    }
-  }
+  webhookCheckout
 );
 
-// app.post(
-//   "/webhook-checkout",
-//   express.raw({ type: "application/json" }),
-//   webhookCheckouts
-// );
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckouts
+);
 
 // Middlewares
 app.use(express.json({ limit: "20kb" }));
