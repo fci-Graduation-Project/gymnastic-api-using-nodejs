@@ -209,13 +209,11 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     customer_email: req.user.email,
     client_reference_id: req.params.exerciseId,
   });
-  const coach = await User.findById(exercise.coach);
-  console.log(coach);
   // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
 
-const createCardOrder = async (session) => {
+const addUserToCoach = async (session) => {
   const coach = await User.findById(exercise.coach);
   console.log(coach);
 
@@ -243,7 +241,7 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === "checkout.session.completed") {
     //  Create order
-    createCardOrder(event.data.object);
+    addUserToCoach(event.data.object);
   }
 
   res.status(200).json({ received: true });
