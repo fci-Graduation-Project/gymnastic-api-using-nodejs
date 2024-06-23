@@ -187,7 +187,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
       )
     );
   }
-  // console.log(exercise.Price);
+  console.log(exercise.Price);
   // 3) Create stripe checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
