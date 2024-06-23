@@ -209,7 +209,8 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     customer_email: req.user.email,
     client_reference_id: req.params.exerciseId,
   });
-
+  const coach = await User.findById(exercise.coach);
+  console.log(coach);
   // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
@@ -219,6 +220,7 @@ const createCardOrder = async (session) => {
   console.log(coach);
 
   coach.Trainees.push(session.client_reference_id);
+  await coach.save();
 
   console.log(coach.Trainees.push(session.client_reference_id));
 
