@@ -14,6 +14,7 @@ const dbConnection = require("./config/database");
 // Routes
 const mountRoutes = require("./routes");
 const { webhookCheckout } = require("./services/orderService");
+const { webhookCheckouts } = require("./services/userCourseService");
 
 // const { webhookCheckout } = require('./services/orderService');
 
@@ -35,6 +36,11 @@ app.post(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
   webhookCheckout
+);
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckouts
 );
 
 // Middlewares

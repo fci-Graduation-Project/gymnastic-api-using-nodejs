@@ -241,7 +241,7 @@ const createCardOrder = async (session) => {
 };
 
 // Webhook to handle stripe payment success
-exports.webhookCheckout = asyncHandler(async (req, res, next) => {
+exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
