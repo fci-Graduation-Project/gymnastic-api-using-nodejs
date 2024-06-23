@@ -14,7 +14,7 @@ const dbConnection = require("./config/database");
 // Routes
 const mountRoutes = require("./routes");
 const { webhookCheckouts } = require("./services/userCourseService");
-// const { webhookCheckout } = require("./services/orderService");
+const { webhookCheckout } = require("./services/orderService");
 
 // Connect with db
 dbConnection();
@@ -30,11 +30,11 @@ app.options("*", cors());
 // compress all responses
 app.use(compression());
 // Checkout webhook
-// app.post(
-//   "/webhook-checkout",
-//   express.raw({ type: "application/json" }),
-//   webhookCheckout
-// );
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 app.post(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
