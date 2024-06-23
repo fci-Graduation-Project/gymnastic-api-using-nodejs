@@ -209,6 +209,11 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     customer_email: req.user.email,
     client_reference_id: req.params.exerciseId,
   });
+  // const exerciseId = session.client_reference_id;
+  // const exercise1 = await User.findById(exerciseId.coach);
+  // const user = await User.findOne({ email: req.user.email });
+  // console.log(exercise1);
+  // console.log(user);
   // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
@@ -216,8 +221,8 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 const addUserToCoach = async (session) => {
   const exerciseId = session.client_reference_id;
   const exercise = await User.findById(exerciseId.coach);
-  const user = await User.findOne(session.customer_email);
-  console.log(coach);
+  const user = await User.findOne({ email: session.customer_email });
+  console.log(exercise);
   console.log(user);
 
   exercise.Trainees.push(user._id);
