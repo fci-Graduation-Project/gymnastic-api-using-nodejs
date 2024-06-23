@@ -17,15 +17,16 @@ const sectorSchema = new mongoose.Schema(
       minlength: [2, "Too short level name"],
       maxlength: [32, "Too long level name"],
     },
-    target: {
+    age: {
       type: String,
-      required: [true, "Target is required"],
+      required: [true, "age is required"],
       minlength: [2, "Too short target name"],
       maxlength: [32, "Too long target name"],
     },
     image: {
       publicId: String,
       url: String,
+      // required: [true, "image is required"],
     },
     exercises: [
       {

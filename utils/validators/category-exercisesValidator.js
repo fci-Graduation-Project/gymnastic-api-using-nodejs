@@ -18,7 +18,7 @@ exports.createSectorValidator = [
       const existingSector = await SectorModel.findOne({
         sector: sector,
         level: req.body.level,
-        target: req.body.target,
+        age: req.body.age,
       });
 
       if (existingSector) {
@@ -28,21 +28,20 @@ exports.createSectorValidator = [
       return true;
     }),
   check("image")
-    // .notEmpty()
-    .optional(),
-
-  // .withMessage("image is required"),
+    // .optional(),
+    .notEmpty()
+    .withMessage("image is required"),
   check("level")
     .notEmpty()
     .withMessage("Level is required")
     .isLength({ min: 2, max: 32 })
     .withMessage("Level name should be between 2 and 32 characters"),
 
-  check("target")
+  check("age")
     .notEmpty()
-    .withMessage("Target is required")
+    .withMessage("age is required")
     .isLength({ min: 2, max: 32 })
-    .withMessage("Target name should be between 2 and 32 characters"),
+    .withMessage("age name should be between 2 and 32 characters"),
 
   validatorMiddleware,
 ];
@@ -56,7 +55,7 @@ exports.updateSectorValidator = [
       const existingSector = await SectorModel.findOne({
         sector: value,
         level: req.body.level,
-        target: req.body.target,
+        age: req.body.age,
       });
 
       if (existingSector) {
