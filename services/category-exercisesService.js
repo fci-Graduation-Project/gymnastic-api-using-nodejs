@@ -35,7 +35,9 @@ exports.getSectors = factory.getAll(Sector);
 
 exports.getOnlySectors = asyncHandler(async (req, res, next) => {
   // Build query to select only specific fields
-  const query = Sector.find({}).select("sector level image age");
+  const query = Sector.find({}).select(
+    "sector level image age createdAt updatedAt"
+  );
 
   // Execute query
   const documents = await query;
