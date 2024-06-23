@@ -94,6 +94,13 @@ const userSchema = new mongoose.Schema(
         date: Date,
       },
     ],
+    Trainees: [
+      {
+        type: mongoose.Schema.ObjectId,
+
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,

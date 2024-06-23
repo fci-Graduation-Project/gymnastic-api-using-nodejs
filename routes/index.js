@@ -13,14 +13,15 @@ const reviewCoachRoute = require("./reviewCoachRoute");
 const wishlistRoute = require("./wishlistRoute");
 const couponRoute = require("./couponRoute");
 const cartRoute = require("./cartRoute");
-// const privateCourseRoute = require("./privateCourseRoute");
+const privateCourseRoute = require("./privateCourseRoute");
 const orderRoute = require("./orderRoute");
 const coachCVRoute = require("./coachCVRoute");
+const userCourseRoute = require("./userCourseRoute");
 
 const mountRoutes = (app) => {
   app.use("/api/v1/category-exercises", categoryExercises);
   app.use("/api/v1/exercise", exercisesRoute);
-  // app.use("/api/v1/privateExercise", privateCourseRoute);
+  app.use("/api/v1/privateExercise", privateCourseRoute);
   app.use("/api/v1/users", userRoute);
   app.use("/api/v1/reviewCoach", reviewCoachRoute);
   app.use("/api/v1/auth", authRoute);
@@ -36,6 +37,7 @@ const mountRoutes = (app) => {
   app.use("/api/v1/cart", cartRoute);
   app.use("/api/v1/orders", orderRoute);
   app.use("/api/v1/coachCV", coachCVRoute);
+  app.use("/api/v1/userCourse", userCourseRoute);
 };
 
 module.exports = mountRoutes;
