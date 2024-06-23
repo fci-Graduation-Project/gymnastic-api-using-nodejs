@@ -14,7 +14,7 @@ const dbConnection = require("./config/database");
 // Routes
 const mountRoutes = require("./routes");
 const { webhookCheckouts } = require("./services/userCourseService");
-const { webhookCheckout } = require("./services/orderService");
+// const { webhookCheckout } = require("./services/orderService");
 
 // const { webhookCheckout } = require('./services/orderService');
 
@@ -37,11 +37,11 @@ app.post(
   express.raw({ type: "application/json" }),
   webhookCheckouts
 );
-app.post(
-  "/webhook-checkout",
-  express.raw({ type: "application/json" }),
-  webhookCheckout
-);
+// app.post(
+//   "/webhook-checkout",
+//   express.raw({ type: "application/json" }),
+//   webhookCheckout
+// );
 
 // Middlewares
 app.use(express.json({ limit: "20kb" }));
