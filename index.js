@@ -11,7 +11,7 @@ dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
-// const { webhookCheckouts } = require("./services/userCourseService");
+const { webhookCheckouts } = require("./services/userCourseService");
 const { webhookCheckout } = require("./services/orderService");
 
 // Routes
@@ -35,7 +35,14 @@ app.use(compression());
 app.post(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
-  webhookCheckout
+  (req, res, next) => {
+    // Example condition: Check if a specific header or parameter exists
+    if (req.headers["x-webhook-type"] === "checkout") {
+      webhookCheckout(req, res, next); // Use webhookCheckout if header is 'checkout'
+    } else {
+      webhookCheckouts(req, res, next); // Use webhookCheckouts for other cases
+    }
+  }
 );
 
 // app.post(
