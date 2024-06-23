@@ -235,7 +235,7 @@ const addUserToCoach = async (session) => {
 // @desc    This webhook will run when stripe payment success paid
 // @route   POST /webhook-checkout
 // @access  Protected/User
-exports.webhookCheckout = asyncHandler(async (req, res, next) => {
+exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
