@@ -14,9 +14,7 @@ const dbConnection = require("./config/database");
 // Routes
 const mountRoutes = require("./routes");
 const { webhookCheckout } = require("./services/userCourseService");
-// const { webhookCheckout } = require("./services/orderService");
-
-// const { webhookCheckout } = require('./services/orderService');
+const { webhookCheckout } = require("./services/orderService");
 
 // Connect with db
 dbConnection();
