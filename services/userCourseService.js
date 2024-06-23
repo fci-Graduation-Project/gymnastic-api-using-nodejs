@@ -222,7 +222,7 @@ const addUserToCoach = async (session) => {
   coach.Trainees.push(user._id);
   await coach.save();
 
-  console.log(coach.Trainees.push(session.client_reference_id));
+  console.log(coach.Trainees.push(user._id));
 };
 // @desc    This webhook will run when stripe payment success paid
 // @route   POST /webhook-checkout
