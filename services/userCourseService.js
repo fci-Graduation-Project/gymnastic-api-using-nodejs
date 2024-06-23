@@ -215,7 +215,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
   console.log(exercise1);
   console.log(coach);
   console.log(user);
-  coach.Trainees.push({ user });
+  coach.Trainees.push(user._id);
   await coach.save(); // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
@@ -228,10 +228,9 @@ const addUserToCoach = async (session) => {
   console.log(exercise);
   console.log(coach);
   console.log(user);
-  coach.Trainees.push({ user });
-  await exercise.save();
-
-  console.log(coach.Trainees.push({ user }));
+  coach.Trainees.push(user._id);
+  await coach.save();
+  console.log(coach.Trainees.push(user._id));
 };
 // @desc    This webhook will run when stripe payment success paid
 // @route   POST /webhook-checkout
