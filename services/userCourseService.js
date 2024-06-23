@@ -209,14 +209,14 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     customer_email: req.user.email,
     client_reference_id: req.params.exerciseId,
   });
-  const exercise1 = await Exercise.findById(req.params.exerciseId);
-  const coach = await User.findById(exercise1.coach);
-  const user = await User.findOne({ email: req.user.email });
-  console.log(exercise1);
-  console.log(coach);
-  console.log(user);
-  coach.Trainees.push(user._id);
-  await coach.save(); // 4) send session to response
+  // const exercise1 = await Exercise.findById(req.params.exerciseId);
+  // const coach = await User.findById(exercise1.coach);
+  // const user = await User.findOne({ email: req.user.email });
+  // console.log(exercise1);
+  // console.log(coach);
+  // console.log(user);
+  // coach.Trainees.push(user._id);
+  // await coach.save(); // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
 
