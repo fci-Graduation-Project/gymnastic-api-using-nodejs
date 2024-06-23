@@ -209,18 +209,20 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     customer_email: req.user.email,
     client_reference_id: req.params.exerciseId,
   });
-  // const exerciseId = session.client_reference_id;
-  // const exercise1 = await User.findById(exerciseId.coach);
-  // const user = await User.findOne({ email: req.user.email });
-  // console.log(exercise1);
-  // console.log(user);
-  // 4) send session to response
+  const exercise1 = await Exercise.findById(req.params.exerciseId);
+  const coach = await User.findById(exercise1.coach);
+  const user = await User.findOne({ email: req.user.email });
+  console.log(exercise1);
+  console.log(coach);
+  console.log(user);
+  coach.Trainees.push({ user });
+  await coach.save(); // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
 
 const addUserToCoach = async (session) => {
   const exerciseId = session.client_reference_id;
-  const exercise = await User.findById(exerciseId);
+  const exercise = await Exercise.findById(exerciseId);
   const coach = await User.findById(exercise.coach);
   const user = await User.findOne({ email: session.customer_email });
   console.log(exercise);
@@ -250,7 +252,6 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === "checkout.session.completed") {
     //  Create order
-    console.log(event.data.object);
 
     addUserToCoach(event.data.object);
   }
