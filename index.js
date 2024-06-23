@@ -13,7 +13,7 @@ const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 // Routes
 const mountRoutes = require("./routes");
-const { webhookCheckouts } = require("./services/userCourseService");
+const { webhookCheckout } = require("./services/userCourseService");
 // const { webhookCheckout } = require("./services/orderService");
 
 // const { webhookCheckout } = require('./services/orderService');
@@ -35,7 +35,7 @@ app.use(compression());
 app.post(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
-  webhookCheckouts
+  webhookCheckout
 );
 // app.post(
 //   "/webhook-checkout",
