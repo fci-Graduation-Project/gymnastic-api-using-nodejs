@@ -13,7 +13,7 @@ const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 // Routes
 const mountRoutes = require("./routes");
-const { webhookCheckout } = require("./services/userCourseService");
+const { webhookCheckouts } = require("./services/userCourseService");
 const { webhookCheckout } = require("./services/orderService");
 
 // Connect with db
@@ -35,11 +35,11 @@ app.post(
   express.raw({ type: "application/json" }),
   webhookCheckout
 );
-// app.post(
-//   "/webhook-checkout",
-//   express.raw({ type: "application/json" }),
-//   webhookCheckout
-// );
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckouts
+);
 
 // Middlewares
 app.use(express.json({ limit: "20kb" }));
