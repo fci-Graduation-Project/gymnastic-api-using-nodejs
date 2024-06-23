@@ -219,7 +219,7 @@ const addUserToCoach = async (session) => {
   console.log(coach);
   console.log(user);
 
-  coach.Trainees.push(session.client_reference_id);
+  coach.Trainees.push(user._id);
   await coach.save();
 
   console.log(coach.Trainees.push(session.client_reference_id));
