@@ -176,97 +176,75 @@ exports.updateCourseItemFinished = asyncHandler(async (req, res, next) => {
   });
 });
 
+// Controller to handle the checkout session
 exports.checkoutSession = asyncHandler(async (req, res, next) => {
-  // 1) Get cart depend on cartId
-  const exercise = await Exercise.findById(req.params.exerciseId);
-  if (!exercise) {
-    return next(
-      new ApiError(
-        `There is no such course with id ${req.params.exerciseId}`,
-        404
-      )
-    );
-  }
-  console.log(exercise.Price);
-  // 3) Create stripe checkout session
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "egp",
-          product_data: {
-            name: req.user.name,
+  try {
+    // 1) Get exercise based on exerciseId
+    const exercise = await Exercise.findById(req.params.exerciseId);
+    if (!exercise) {
+      return next(
+        new ApiError(`No exercise found with id ${req.params.exerciseId}`, 404)
+      );
+    }
+
+    // 2) Create stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "egp",
+            product_data: {
+              name: req.user.name,
+            },
+            unit_amount: exercise.Price * 100,
           },
-          unit_amount: exercise.Price * 100,
+          quantity: 1,
         },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: `${req.protocol}://${req.get("host")}/exercise`,
-    cancel_url: `${req.protocol}://${req.get("host")}/private`,
-    customer_email: req.user.email,
-    client_reference_id: req.params.exerciseId,
-  });
-  const coach = await User.findById(exercise.coach);
-  console.log(coach);
-  // 4) send session to response
-  res.status(200).json({ status: "success", session });
+      ],
+      mode: "payment",
+      success_url: `${req.protocol}://${req.get("host")}/exercise`,
+      cancel_url: `${req.protocol}://${req.get("host")}/private`,
+      customer_email: req.user.email,
+      client_reference_id: req.params.exerciseId,
+    });
+
+    // 3) Send session to response
+    res.status(200).json({ status: "success", session });
+  } catch (error) {
+    next(error);
+  }
 });
 
+// Function to create card order
 const createCardOrder = async (session) => {
-  const coach = await User.findById(exercise.coach);
-  console.log(coach);
+  try {
+    const exercise = await Exercise.findById(session.client_reference_id);
+    if (!exercise) {
+      throw new Error(
+        `No exercise found with id ${session.client_reference_id}`
+      );
+    }
 
-  coach.Trainees.push(session.client_reference_id);
-  await coach.save();
+    const coach = await User.findById(exercise.coach);
+    if (!coach) {
+      throw new Error(`No coach found with id ${exercise.coach}`);
+    }
 
-  console.log(coach.Trainees.push(session.client_reference_id));
+    coach.Trainees.push(session.client_reference_id);
+    await coach.save();
 
-  // course.courseItems.push({ exercise: ExerciseId });
-
-  //   const cartId = session.client_reference_id;
-  //   const shippingAddress = session.metadata;
-  //   const oderPrice = session.amount_total / 100;
-
-  //   const cart = await Cart.findById(cartId);
-  //   const user = await User.findOne({ email: session.customer_email });
-
-  //   // 3) Create order with default paymentMethodType card
-  //   const order = await Order.create({
-  //     user: user._id,
-  //     cartItems: cart.cartItems,
-  //     shippingAddress,
-  //     totalOrderPrice: oderPrice,
-  //     isPaid: true,
-  //     paidAt: Date.now(),
-  //     paymentMethodType: "card",
-  //   });
-
-  //   // 4) After creating order, decrement product quantity, increment product sold
-  //   if (order) {
-  //     const bulkOption = cart.cartItems.map((item) => ({
-  //       updateOne: {
-  //         filter: { _id: item.product },
-  //         update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
-  //       },
-  //     }));
-  //     await Product.bulkWrite(bulkOption, {});
-
-  //     // 5) Clear cart depend on cartId
-  //     await Cart.findByIdAndDelete(cartId);
-  //   }
+    console.log(`Trainees updated: ${coach.Trainees}`);
+  } catch (error) {
+    console.error(`Error creating card order: ${error.message}`);
+  }
 };
 
-// @desc    This webhook will run when stripe payment success paid
-// @route   POST /webhook-checkout
-// @access  Protected/User
+// Webhook to handle stripe payment success
 exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
-
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
@@ -276,8 +254,9 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
+
   if (event.type === "checkout.session.completed") {
-    //  Create order
+    // Create order
     createCardOrder(event.data.object);
   }
 
