@@ -161,6 +161,11 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     client_reference_id: req.params.cartId,
     metadata: req.body.shippingAddress,
   });
+  const exercise = await Cart.findById(session.client_reference_id);
+  console.log({ b: exercise });
+  let q = session.client_reference_id;
+  const exercise1 = await Cart.findOne({ q });
+  console.log({ d: exercise1 });
 
   // 4) send session to response
   res.status(200).json({ status: "success", session });
@@ -221,16 +226,10 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
     //  Create order
     // console.log({ a: event.data.object.client_reference_id });
     // const a = event.data.object.client_reference_id;
-    const exercise = await Exercise.findById(
-      event.data.object.client_reference_id
-    );
+    const exercise = await Cart.findById(event.data.object.client_reference_id);
     console.log({ b: exercise });
-    const exercise1 = await Exercise.findOne(
-      event.data.object.client_reference_id
-    );
-    console.log({ d: exercise1 });
 
-    if (!exercise1) {
+    if (!exercise) {
       createCardOrder(event.data.object);
       console.log(exercise);
     } else {
