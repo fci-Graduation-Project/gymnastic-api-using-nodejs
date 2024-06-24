@@ -226,10 +226,9 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
     //  Create order
     // console.log({ a: event.data.object.client_reference_id });
     // const a = event.data.object.client_reference_id;
-    const exercise = await Cart.findById(event.data.object.client_reference_id);
-    console.log({ b: exercise });
+    const cart = await Cart.findById(event.data.object.client_reference_id);
 
-    if (exercise !== null) {
+    if (cart !== null) {
       createCardOrder(event.data.object);
       console.log(exercise);
     } else {
@@ -239,12 +238,8 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       const user = await User.findOne({
         email: event.data.object.customer_email,
       });
-      console.log(exercise);
-      console.log(coach);
-      console.log(user);
       coach.Trainees.push(user._id);
       await coach.save();
-      console.log(coach.Trainees.push(user._id));
     }
   }
 
