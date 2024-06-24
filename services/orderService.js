@@ -2,9 +2,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
 const ApiError = require("../utils/apiError");
-const Exercise = require("../models/privateCourseModel");
-
 const User = require("../models/userModel");
+const Exercise = require("../models/privateCourseModel");
 const Product = require("../models/productModel");
 const Cart = require("../models/cartModel");
 const Order = require("../models/orderModel");
@@ -220,12 +219,12 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === "checkout.session.completed") {
     //  Create order
-    console.log(event.data.object.client_reference_id);
-
-    const exercise = await Exercise.findById(
-      event.data.object.client_reference_id
-    );
-    console.log(exercise);
+    console.log({ a: event.data.object.client_reference_id });
+    const a = event.data.object.client_reference_id;
+    const exercise = await Exercise.findById({ a });
+    const exercise1 = await Exercise.findOne({ a });
+    console.log({ b: exercise });
+    console.log({ d: exercise1 });
 
     if (!exercise) {
       createCardOrder(event.data.object);
