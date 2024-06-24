@@ -12,7 +12,7 @@ const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 const { webhookCheckouts } = require("./services/userCourseService");
-const { webhookCheckout } = require("./services/orderService");
+// const { webhookCheckout } = require("./services/orderService");
 
 // Routes
 const mountRoutes = require("./routes");
@@ -32,11 +32,11 @@ app.options("*", cors());
 app.use(compression());
 // Checkout webhook
 
-app.post(
-  "/webhook-checkout",
-  express.raw({ type: "application/json" }),
-  webhookCheckout
-);
+// app.post(
+//   "/webhook-checkout",
+//   express.raw({ type: "application/json" }),
+//   webhookCheckout
+// );
 
 app.post(
   "/webhook-checkout",
