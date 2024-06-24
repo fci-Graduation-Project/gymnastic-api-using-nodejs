@@ -219,7 +219,26 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === "checkout.session.completed") {
     //  Create order
-    createCardOrder(event.data.object);
+    const exercise = await Exercise.findById(
+      event.data.object.client_reference_id
+    );
+
+    if (exercise) {
+      // const exerciseId = event.data.object.client_reference_id;
+      // const exercise = await Exercise.findById(exerciseId);
+      const coach = await User.findById(exercise.coach);
+      const user = await User.findOne({
+        email: event.data.object.customer_email,
+      });
+      console.log(exercise);
+      console.log(coach);
+      console.log(user);
+      coach.Trainees.push(user._id);
+      await coach.save();
+      console.log(coach.Trainees.push(user._id));
+    } else {
+      createCardOrder(event.data.object);
+    }
   }
 
   res.status(200).json({ received: true });

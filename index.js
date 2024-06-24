@@ -11,8 +11,8 @@ dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
-const { webhookCheckouts } = require("./services/userCourseService");
-// const { webhookCheckout } = require("./services/orderService");
+// const { webhookCheckouts } = require("./services/userCourseService");
+const { webhookCheckout } = require("./services/orderService");
 
 // Routes
 const mountRoutes = require("./routes");
@@ -35,13 +35,13 @@ app.use(compression());
 // app.post(
 //   "/webhook-checkout",
 //   express.raw({ type: "application/json" }),
-//   webhookCheckout
+//   webhookCheckouts
 // );
 
 app.post(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
-  webhookCheckouts
+  webhookCheckout
 );
 
 // Middlewares

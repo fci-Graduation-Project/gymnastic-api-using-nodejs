@@ -237,7 +237,6 @@ exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-
   if (event.type === "checkout.session.completed") {
     //  Create order
     const exerciseId = event.data.object.client_reference_id;
