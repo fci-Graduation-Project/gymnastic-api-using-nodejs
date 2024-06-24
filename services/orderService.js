@@ -219,11 +219,15 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === "checkout.session.completed") {
     //  Create order
-    console.log({ a: event.data.object.client_reference_id });
-    const a = event.data.object.client_reference_id;
-    const exercise = await Exercise.findById(a);
-    const exercise1 = await Exercise.findOne(a);
+    // console.log({ a: event.data.object.client_reference_id });
+    // const a = event.data.object.client_reference_id;
+    const exercise = await Exercise.findById(
+      event.data.object.client_reference_id
+    );
     console.log({ b: exercise });
+    const exercise1 = await Exercise.findOne(
+      event.data.object.client_reference_id
+    );
     console.log({ d: exercise1 });
 
     if (!exercise1) {
