@@ -221,12 +221,12 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
     //  Create order
     console.log({ a: event.data.object.client_reference_id });
     const a = event.data.object.client_reference_id;
-    const exercise = await Exercise.findById({ a });
-    const exercise1 = await Exercise.findOne({ a });
+    const exercise = await Exercise.findById(a);
+    const exercise1 = await Exercise.findOne(a);
     console.log({ b: exercise });
     console.log({ d: exercise1 });
 
-    if (!exercise) {
+    if (!exercise1) {
       createCardOrder(event.data.object);
       console.log(exercise);
     } else {
