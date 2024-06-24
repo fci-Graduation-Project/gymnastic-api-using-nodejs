@@ -2,6 +2,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
 const ApiError = require("../utils/apiError");
+const Exercise = require("../models/privateCourseModel");
 
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
