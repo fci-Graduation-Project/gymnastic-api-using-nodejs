@@ -224,7 +224,9 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       event.data.object.client_reference_id
     );
 
-    if (exercise) {
+    if (!exercise) {
+      createCardOrder(event.data.object);
+    } else {
       // const exerciseId = event.data.object.client_reference_id;
       // const exercise = await Exercise.findById(exerciseId);
       const coach = await User.findById(exercise.coach);
@@ -237,8 +239,6 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       coach.Trainees.push(user._id);
       await coach.save();
       console.log(coach.Trainees.push(user._id));
-    } else {
-      createCardOrder(event.data.object);
     }
   }
 
