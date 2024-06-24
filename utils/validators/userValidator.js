@@ -213,6 +213,8 @@ exports.updateLoggedUserValidator = [
       }
       return true;
     }),
+  check("medal").optional(),
+  check("experience_years").optional(),
   check("profileImg").optional(),
 
   validatorMiddleware,

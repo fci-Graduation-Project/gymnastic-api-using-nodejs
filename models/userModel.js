@@ -85,6 +85,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
     experience_years: Number,
+    medal: Number,
     certifications: [String],
     medals: [
       {

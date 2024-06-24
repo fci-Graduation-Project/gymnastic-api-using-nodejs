@@ -237,20 +237,22 @@ exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  if (event.type === "checkout.session.completed") {
-    //  Create order
-    const exerciseId = event.data.object.client_reference_id;
-    const exercise = await Exercise.findById(exerciseId);
-    const coach = await User.findById(exercise.coach);
-    const user = await User.findOne({
-      email: event.data.object.customer_email,
-    });
-    console.log(exercise);
-    console.log(coach);
-    console.log(user);
-    coach.Trainees.push(user._id);
-    await coach.save();
-    console.log(coach.Trainees.push(user._id));
+  if (req.params.exerciseId) {
+    if (event.type === "checkout.session.completed") {
+      //  Create order
+      const exerciseId = event.data.object.client_reference_id;
+      const exercise = await Exercise.findById(exerciseId);
+      const coach = await User.findById(exercise.coach);
+      const user = await User.findOne({
+        email: event.data.object.customer_email,
+      });
+      console.log(exercise);
+      console.log(coach);
+      console.log(user);
+      coach.Trainees.push(user._id);
+      await coach.save();
+      console.log(coach.Trainees.push(user._id));
+    }
   }
 
   res.status(200).json({ received: true });

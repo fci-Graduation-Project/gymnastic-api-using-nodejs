@@ -47,6 +47,7 @@ class ApiFeatures {
         ];
       } else {
         query = { name: { $regex: this.queryString.keyword, $options: "i" } };
+        query = { age: { $regex: this.queryString.keyword, $options: "i" } };
       }
 
       this.mongooseQuery = this.mongooseQuery.find(query);

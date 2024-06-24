@@ -162,11 +162,13 @@ exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
       weight: req.body.weight,
       height: req.body.height,
       gender: req.body.gender,
+      medal: req.body.medal,
+      experience_years: req.body.experience_years,
     },
     { new: true }
   );
 
-  console.log(updatedUser);
+  // console.log(updatedUser);
 
   res.status(200).json({ data: updatedUser });
 });
