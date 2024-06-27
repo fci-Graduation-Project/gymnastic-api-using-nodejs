@@ -15,10 +15,7 @@ const privateCourseSchema = new mongoose.Schema(
         focusArea: [String],
       },
     ],
-    quantity: {
-      type: Number,
-      default: 1,
-    },
+    nameofcourse: String,
     Price: Number,
     coach: {
       type: mongoose.Schema.ObjectId,
