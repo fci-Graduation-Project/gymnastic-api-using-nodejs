@@ -10,6 +10,7 @@ const privateCourseSchema = new mongoose.Schema(
         time: Number,
         videoUrl: String,
         imageCover: String,
+        AnimationUrl: String,
         description: String,
         focusArea: [String],
       },
