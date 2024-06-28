@@ -31,7 +31,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 // @desc    Get list of sector
 // @route   GET /api/v1/sector
 // @access  Public
-exports.getSectors = factory.getAll(Sector);
+// exports.getSectors = factory.getAll(Sector, "Products");
 
 exports.getOnlySectors = asyncHandler(async (req, res, next) => {
   // Build query to select only specific fields
@@ -48,6 +48,24 @@ exports.getOnlySectors = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ count: documents.length, data: documents });
 });
+exports.getSectors = asyncHandler(async (req, res, next) => {
+  let query = {};
+
+  if (req.query.keyword) {
+    query.age = { $regex: req.query.keyword, $options: "i" };
+  }
+
+  const documents = await Sector.find(query).select(
+    "sector level image age createdAt updatedAt"
+  );
+
+  if (!documents) {
+    return next(new ApiError("No documents found", 404));
+  }
+
+  res.status(200).json({ count: documents.length, data: documents });
+});
+
 // @desc    Get specific Sector by id
 // @route   GET /api/v1/sector/:id
 // @access  Public

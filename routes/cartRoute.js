@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 const {
   addProductToCart,
@@ -7,22 +7,22 @@ const {
   clearCart,
   updateCartItemQuantity,
   applyCoupon,
-} = require('../services/cartService');
-const authService = require('../services/authService');
+} = require("../services/cartService");
+const authService = require("../services/authService");
 
 const router = express.Router();
 
-router.use(authService.protect, authService.allowedTo('user'));
+router.use(authService.protect, authService.allowedTo("user", "coach"));
 router
-  .route('/')
+  .route("/")
   .post(addProductToCart)
   .get(getLoggedUserCart)
   .delete(clearCart);
 
-router.put('/applyCoupon', applyCoupon);
+router.put("/applyCoupon", applyCoupon);
 
 router
-  .route('/:itemId')
+  .route("/:itemId")
   .put(updateCartItemQuantity)
   .delete(removeSpecificCartItem);
 

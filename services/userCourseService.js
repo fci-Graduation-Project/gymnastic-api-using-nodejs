@@ -19,20 +19,31 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
     coach: req.user._id,
     "privateExercises._id": ExerciseId,
   });
-  // console.log(exercise);
+  console.log(exercise);
+  console.log(exercise.coach.toString());
+  console.log(req.user._id.toString());
+  if (exercise.coach.toString() !== req.user._id.toString()) {
+    return next(
+      new ApiError(`you not owner this exercise to add ${ExerciseId} `, 404)
+    );
+  }
+  console.log(req.user._id.toString());
   if (!exercise) {
     return next(
-      new ApiError(
-        `There is no user with id ${ExerciseId} or you not allow for this exercises `,
-        404
-      )
+      new ApiError(`There is no exercise with id ${ExerciseId} `, 404)
     );
   }
 
-  let course = await Course.findOne({ user });
+  let course = await Course.findOne({ coach: req.user._id, user });
   // console.log(course);
-
-  if (!course) {
+  // console.log(course.coach);
+  // console.log(!(course.coach.toString() & user));
+  // console.log(!course);
+  // console.log(!course && !(course.coach.toString() & user));
+  // if (course.coach.toString() !== req.user._id.toString()) {
+  //   return next(new ApiError(`You are not allow to add here `, 404));
+  // }
+  if (!course && !(course.coach.toString() & user)) {
     // create cart fot logged user with product
     course = await Course.create({
       coach: req.user._id,

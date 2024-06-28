@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   createCashOrder,
   findAllOrders,
@@ -7,37 +7,39 @@ const {
   updateOrderToPaid,
   updateOrderToDelivered,
   checkoutSession,
-} = require('../services/orderService');
+} = require("../services/orderService");
 
-const authService = require('../services/authService');
+const authService = require("../services/authService");
 
 const router = express.Router();
 
 router.use(authService.protect);
 
 router.get(
-  '/checkout-session/:cartId',
-  authService.allowedTo('user'),
+  "/checkout-session/:cartId",
+  authService.allowedTo("user", "coach"),
   checkoutSession
 );
 
-router.route('/:cartId').post(authService.allowedTo('user'), createCashOrder);
+router
+  .route("/:cartId")
+  .post(authService.allowedTo("user", "coach"), createCashOrder);
 router.get(
-  '/',
-  authService.allowedTo('user', 'admin', 'manager'),
+  "/",
+  authService.allowedTo("user", "coach", "admin", "manager"),
   filterOrderForLoggedUser,
   findAllOrders
 );
-router.get('/:id', findSpecificOrder);
+router.get("/:id", findSpecificOrder);
 
 router.put(
-  '/:id/pay',
-  authService.allowedTo('admin', 'manager'),
+  "/:id/pay",
+  authService.allowedTo("admin", "manager"),
   updateOrderToPaid
 );
 router.put(
-  '/:id/deliver',
-  authService.allowedTo('admin', 'manager'),
+  "/:id/deliver",
+  authService.allowedTo("admin", "manager"),
   updateOrderToDelivered
 );
 
