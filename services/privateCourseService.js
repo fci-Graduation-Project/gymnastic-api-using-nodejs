@@ -47,6 +47,7 @@ exports.addExercise = asyncHandler(async (req, res, next) => {
 // @desc    Get logged user cart
 // @route   GET /api/v1/cart
 // @access  Private/User
+
 exports.getLoggedCoachCourse = asyncHandler(async (req, res, next) => {
   const exercise = await PrivateCourse.findOne({ coach: req.user._id });
   if (!exercise) {

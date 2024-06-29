@@ -16,26 +16,26 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
     return next(new ApiError(`There is no user with id ${req.body.user}`, 404));
   }
   const exercise = await Exercise.findOne({
-    coach: req.user._id,
+    // coach: req.user._id,
     "privateExercises._id": ExerciseId,
   });
-  console.log(exercise);
-  console.log(exercise.coach.toString());
-  console.log(req.user._id.toString());
-  if (exercise.coach.toString() !== req.user._id.toString()) {
-    return next(
-      new ApiError(`you not owner this exercise to add ${ExerciseId} `, 404)
-    );
-  }
-  console.log(req.user._id.toString());
+  // console.log(exercise);
+  // console.log(exercise.coach.toString());
+  // console.log(req.user._id.toString());
+  // console.log(req.user._id.toString());
   if (!exercise) {
     return next(
       new ApiError(`There is no exercise with id ${ExerciseId} `, 404)
     );
   }
 
+  if (exercise.coach.toString() !== req.user._id.toString()) {
+    return next(
+      new ApiError(`you not owner this exercise to add ${ExerciseId} `, 404)
+    );
+  }
   let course = await Course.findOne({ coach: req.user._id, user });
-  // console.log(course);
+  console.log(course);
   // console.log(course.coach);
   // console.log(!(course.coach.toString() & user));
   // console.log(!course);
@@ -43,7 +43,7 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
   // if (course.coach.toString() !== req.user._id.toString()) {
   //   return next(new ApiError(`You are not allow to add here `, 404));
   // }
-  if (!course && !(course.coach.toString() & user)) {
+  if (!course) {
     // create cart fot logged user with product
     course = await Course.create({
       coach: req.user._id,
@@ -82,7 +82,7 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/cart
 // @access  Private/User
 exports.getLoggedUserCourse = asyncHandler(async (req, res, next) => {
-  const course = await Course.findOne({ user: req.user._id });
+  const course = await Course.find({ user: req.user._id });
   // .populate({
   //   path: "courseItems.exercise",
   //   // model: "Exercise", // Ensure this matches your PrivateCourse model name
@@ -96,7 +96,7 @@ exports.getLoggedUserCourse = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    numOfCourseItems: course.courseItems.length,
+    numOfCourse: course.length,
     data: course,
   });
 });

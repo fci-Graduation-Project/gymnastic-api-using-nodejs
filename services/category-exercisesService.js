@@ -56,7 +56,6 @@ exports.getSectors = asyncHandler(async (req, res, next) => {
 
     if (!isNaN(keyword)) {
       const documents = await Sector.find({});
-      console.log(documents);
       const filteredDocuments = documents.filter((doc) => {
         const [min, max] = doc.age.split("-").map(Number);
         return keyword >= min && keyword <= max;
