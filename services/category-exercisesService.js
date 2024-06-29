@@ -52,18 +52,35 @@ exports.getSectors = asyncHandler(async (req, res, next) => {
   let query = {};
 
   if (req.query.keyword) {
-    query.age = { $regex: req.query.keyword, $options: "i" };
+    const keyword = parseInt(req.query.keyword, 10);
+
+    if (!isNaN(keyword)) {
+      const documents = await Sector.find({});
+      console.log(documents);
+      const filteredDocuments = documents.filter((doc) => {
+        const [min, max] = doc.age.split("-").map(Number);
+        return keyword >= min && keyword <= max;
+      });
+
+      if (filteredDocuments.length === 0) {
+        return next(new ApiError("No documents found", 404));
+      }
+
+      return res
+        .status(200)
+        .json({ count: filteredDocuments.length, data: filteredDocuments });
+    } else {
+      return next(new ApiError("Invalid keyword format", 400));
+    }
+  } else {
+    const documents = await Sector.find({});
+
+    if (documents.length === 0) {
+      return next(new ApiError("No documents found", 404));
+    }
+
+    res.status(200).json({ count: documents.length, data: documents });
   }
-
-  const documents = await Sector.find(query).select(
-    "sector level image age createdAt updatedAt"
-  );
-
-  if (!documents) {
-    return next(new ApiError("No documents found", 404));
-  }
-
-  res.status(200).json({ count: documents.length, data: documents });
 });
 
 // @desc    Get specific Sector by id
