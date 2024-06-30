@@ -23,6 +23,7 @@ const {
   getAllLikes,
   getAllMyPosts,
   getAllPosts,
+  getAdminAllPost,
   getSpecificPost,
   removeLike,
   updatePost,
@@ -50,6 +51,7 @@ router.delete("/delete/:id", deletePost);
 router.get("/all/following", getAllPosts);
 
 router.get("/all/my-posts", getAllMyPosts);
+router.get("/allposts", getAdminAllPost);
 
 router.get("/one/:id", getSpecificPost);
 

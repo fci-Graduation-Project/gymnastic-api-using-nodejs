@@ -178,6 +178,14 @@ const getSpecificPost = asyncHandler(async (req, res) => {
   });
 });
 
+const getAdminAllPost = asyncHandler(async (req, res) => {
+  const post = await Post.find({});
+  res.status(200).json({
+    status: "success",
+    post,
+  });
+});
+
 const updatePost = asyncHandler(async (req, res) => {
   const { text, image, video } = req.body;
   const post = await Post.findOne({ _id: req.params.id, user: req.user._id });
@@ -243,6 +251,7 @@ const getAllLikes = asyncHandler(async (req, res) => {
 module.exports = {
   createPost,
   getAllPosts,
+  getAdminAllPost,
   getAllMyPosts,
   getSpecificPost,
   updatePost,

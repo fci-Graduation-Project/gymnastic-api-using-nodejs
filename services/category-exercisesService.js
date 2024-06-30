@@ -72,7 +72,7 @@ exports.getSectors = asyncHandler(async (req, res, next) => {
       return next(new ApiError("Invalid keyword format", 400));
     }
   } else {
-    const documents = await Sector.find({});
+    const documents = await Sector.find(req.query);
 
     if (documents.length === 0) {
       return next(new ApiError("No documents found", 404));
