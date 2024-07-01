@@ -34,19 +34,38 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 // exports.getSectors = factory.getAll(Sector, "Products");
 
 exports.getOnlySectors = asyncHandler(async (req, res, next) => {
-  // Build query to select only specific fields
-  const documents = await Sector.find(req.query).select(
-    "sector level image age createdAt updatedAt"
-  );
+  let query = {};
 
-  // Execute query
-  // const documents = await query;
+  if (req.query.keyword) {
+    const keyword = parseInt(req.query.keyword, 10);
 
-  if (!documents) {
-    return next(new ApiError("No documents found", 404));
+    if (!isNaN(keyword)) {
+      const documents = await Sector.find({});
+      const filteredDocuments = documents.filter((doc) => {
+        const [min, max] = doc.age.split("-").map(Number);
+        return keyword >= min && keyword <= max;
+      });
+
+      if (filteredDocuments.length === 0) {
+        return next(new ApiError("No documents found", 404));
+      }
+
+      return res
+        .status(200)
+        .json({ count: filteredDocuments.length, data: filteredDocuments });
+    } else {
+      return next(new ApiError("Invalid keyword format", 400));
+    }
+  } else {
+    const documents = await Sector.find(req.query).select(
+      "sector level image age createdAt updatedAt"
+    );
+    if (documents.length === 0) {
+      return next(new ApiError("No documents found", 404));
+    }
+
+    res.status(200).json({ count: documents.length, data: documents });
   }
-
-  res.status(200).json({ count: documents.length, data: documents });
 });
 exports.getSectors = asyncHandler(async (req, res, next) => {
   let query = {};
