@@ -7,13 +7,15 @@ const {
   removeexercises,
   getexercises,
   updateexercises,
+  uploadExercisesImage,
+  resizeImage,
 } = require("../services/exercisesService");
 
 const router = express.Router();
 
 // router.use(authService.protect, authService.allowedTo("user"));
 
-router.route("/").post(addexercises);
+router.route("/").post(uploadExercisesImage, resizeImage, addexercises);
 router.route("/:exercisesId").get(getexercises);
 router
   .route("/sector/:sectorId/exercise/:exercisesId")

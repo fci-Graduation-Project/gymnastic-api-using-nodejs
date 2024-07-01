@@ -5,6 +5,7 @@ const sectorSchema = new mongoose.Schema(
   {
     sector: {
       type: String,
+
       // enum: ["Basics", "Flexibility", "Inversion", "Mobility"],
       required: [true, "Sector is required"],
       minlength: [2, "Too short sector name"],
@@ -34,9 +35,15 @@ const sectorSchema = new mongoose.Schema(
         trainingName: String,
         count: Number,
         time: Number,
-        image: String,
+        images: {
+          publicId: String,
+          url: String,
+        },
         animationUrl: String,
-        videoUrl: String,
+        videoUrl: {
+          publicId: String,
+          url: String,
+        },
         description: String,
         focusArea: [String],
       },

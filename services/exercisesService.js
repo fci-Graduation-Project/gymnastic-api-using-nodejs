@@ -1,7 +1,33 @@
+const cloudinary = require("cloudinary").v2;
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 
+const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 const Sector = require("../models/category-exercisesModel");
+
+exports.uploadExercisesImage = uploadSingleImage("exercises[images]");
+
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  if (req.file) {
+    const transformationOptions = {
+      width: 500,
+      height: 500,
+      crop: "fill",
+      gravity: "auto",
+      format: "auto",
+      quality: "auto",
+    };
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "auto",
+      folder: "gymnastic/sectorexercise",
+      transformation: transformationOptions,
+    });
+    const { public_id, secure_url } = result;
+    req.body.exercises.images = { publicId: public_id, url: secure_url };
+    console.log(req.file);
+  }
+  next();
+});
 
 // @desc    Add exercises to sector exercises list
 // @route   POST /api/v1/exercises
