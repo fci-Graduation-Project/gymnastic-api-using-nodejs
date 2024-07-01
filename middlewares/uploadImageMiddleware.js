@@ -16,8 +16,7 @@ const multerOptions = () => {
     fileFilter: (req, file, cb) => {
       // Check file type
       if (
-        (!file.mimetype.startsWith("image")) ||
-        (!file.mimetype.startsWith("video"))
+        !file.mimetype.startsWith("image") 
       ) {
         // console.log(req.file);
         return cb(new ApiError("Only image files are allowed!"), false);
