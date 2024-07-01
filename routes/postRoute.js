@@ -38,7 +38,7 @@ router.use(authService.allowedTo("admin", "coach", "user"));
 router.post(
   "/add",
   authService.protect,
-  authService.allowedTo("user"),
+  authService.allowedTo("user", "coach"),
   uploadUserImage,
   resizeImage,
   createPost
