@@ -1,0 +1,68 @@
+// const Router = require("express");
+const express = require("express");
+
+// const router = Router();
+
+// const protectRoutes = require("../services/authService");
+
+// const protectRoutes = require("../middleware/auth.middleware.js");
+// const { allowTo } = require("../controller/auth.controller.js");
+// const {
+//   addLikeValidator,
+//   createPostValidator,
+//   deletedLikeValidator,
+//   updatePostValidator,
+// } = require("../utils/validators/post.validator.js");
+
+const {
+  addLike,
+  resizeImage,
+  uploadUserImage,
+  createPost,
+  deletePost,
+  getAllLikes,
+  getAllMyPosts,
+  getAllPosts,
+  getAdminAllPost,
+  getSpecificPost,
+  removeLike,
+  updatePost,
+} = require("../services/postService");
+const authService = require("../services/authService");
+
+const router = express.Router();
+
+router.use(authService.protect);
+router.use(authService.allowedTo("admin", "coach", "user"));
+
+router.post(
+  "/add", 
+  authService.protect,
+<<<<<<< HEAD:routes/postRoute.js
+  authService.allowedTo("admin", "user", "coach"),
+=======
+  authService.allowedTo("user", "coach","admin"),
+>>>>>>> 092fd718a77fd6da2f7fd37634571d77320d4274:H
+  uploadUserImage,
+  resizeImage,
+  createPost
+);
+
+router.patch("/update/:id", updatePost);
+
+router.delete("/delete/:id", deletePost);
+
+router.get("/all/following", getAllPosts);
+
+router.get("/all/my-posts", getAllMyPosts);
+router.get("/allposts", getAdminAllPost);
+
+router.get("/one/:id", getSpecificPost);
+
+router.post("/:id/like", addLike);
+
+router.delete("/:id/like", removeLike);
+
+router.get("/:id/all-like", getAllLikes);
+
+module.exports = router;

@@ -1,54 +1,64 @@
+// const Router = require("express");
 const express = require("express");
-const {
-  getProductValidator,
-  createProductValidator,
-  updateProductValidator,
-  deleteProductValidator,
-} = require("../utils/validators/productValidator");
+
+// const router = Router();
+
+// const protectRoutes = require("../services/authService");
+
+// const protectRoutes = require("../middleware/auth.middleware.js");
+// const { allowTo } = require("../controller/auth.controller.js");
+// const {
+//   addLikeValidator,
+//   createPostValidator,
+//   deletedLikeValidator,
+//   updatePostValidator,
+// } = require("../utils/validators/post.validator.js");
 
 const {
-  getProducts,
-  getProduct,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  uploadProductImages,
-  resizeProductImages,
-} = require("../services/productService");
-// const authService = require('../services/authService');
-const reviewsRoute = require("./reviewRoute");
+  addLike,
+  resizeImage,
+  uploadUserImage,
+  createPost,
+  deletePost,
+  getAllLikes,
+  getAllMyPosts,
+  getAllPosts,
+  getAdminAllPost,
+  getSpecificPost,
+  removeLike,
+  updatePost,
+} = require("../services/postService");
+const authService = require("../services/authService");
 
 const router = express.Router();
 
-// POST   /products/jkshjhsdjh2332n/reviews
-// GET    /products/jkshjhsdjh2332n/reviews
-// GET    /products/jkshjhsdjh2332n/reviews/87487sfww3
-router.use("/:productId/reviews", reviewsRoute);
+router.use(authService.protect);
+router.use(authService.allowedTo("admin", "coach", "user"));
 
-router.route("/").get(getProducts).post(
-  // authService.protect,
-  // authService.allowedTo('admin', 'manager'),
-  // uploadProductImages,
-  // resizeProductImages,
-  createProductValidator,
-  createProduct
+router.post(
+  "/add",
+  authService.protect,
+  authService.allowedTo("user", "coach", "admin"),
+  uploadUserImage,
+  resizeImage,
+  createPost
 );
-router
-  .route("/:id")
-  .get(getProductValidator, getProduct)
-  .put(
-    // authService.protect,
-    // authService.allowedTo('admin', 'manager'),
-    // uploadProductImages,
-    // resizeProductImages,
-    updateProductValidator,
-    updateProduct
-  )
-  .delete(
-    // authService.protect,
-    // authService.allowedTo('admin'),
-    deleteProductValidator,
-    deleteProduct
-  );
+
+router.patch("/update/:id", updatePost);
+
+router.delete("/delete/:id", deletePost);
+
+router.get("/all/following", getAllPosts);
+
+router.get("/all/my-posts", getAllMyPosts);
+router.get("/allposts", getAdminAllPost);
+
+router.get("/one/:id", getSpecificPost);
+
+router.post("/:id/like", addLike);
+
+router.delete("/:id/like", removeLike);
+
+router.get("/:id/all-like", getAllLikes);
 
 module.exports = router;
