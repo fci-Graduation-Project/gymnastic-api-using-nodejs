@@ -7,6 +7,7 @@ const Exercise = require("../models/privateCourseModel");
 const Product = require("../models/productModel");
 const Cart = require("../models/cartModel");
 const Order = require("../models/orderModel");
+const Course = require("../models/userCourseModel");
 
 // @desc    create cash order
 // @route   POST /api/v1/orders/cartId
@@ -225,7 +226,7 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
 
     if (cart !== null) {
       createCardOrder(event.data.object);
-      console.log(exercise);
+      // console.log(exercise);
     } else {
       const exerciseId = event.data.object.client_reference_id;
       const exercise = await Exercise.findById(exerciseId);
@@ -234,6 +235,15 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
         email: event.data.object.customer_email,
       });
       coach.Trainees.push(user._id);
+      const course = await Course.create({
+        user: user._id,
+        coach: coach._id,
+        // courseName: req.body.courseName,
+        isPaid: true,
+        // courseItems: [{ exercise: ExerciseId }],
+      });
+      console.log(course);
+      // await course.save();
       await coach.save();
     }
   }
