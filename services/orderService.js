@@ -164,11 +164,6 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     client_reference_id: req.params.cartId,
     metadata: req.body.shippingAddress,
   });
-  const exercise = await Cart.findById(session.client_reference_id);
-  console.log({ b: exercise });
-  let q = session.client_reference_id;
-  const exercise1 = await Cart.findOne({ q });
-  console.log({ d: exercise1 });
 
   // 4) send session to response
   res.status(200).json({ status: "success", session });

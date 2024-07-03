@@ -1,7 +1,6 @@
 const path = require("path");
 const http = require("http");
 const express = require("express");
-const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
 const compression = require("compression");
@@ -11,11 +10,12 @@ const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 // const { webhookCheckouts } = require("./services/userCourseService");
 const { webhookCheckout } = require("./services/orderService");
+const dotenv = require("dotenv");
+dotenv.config({ path: "config.env" });
 
 // Routes
 const mountRoutes = require("./routes");
 
-dotenv.config({ path: "config.env" });
 // Connect with db
 dbConnection();
 

@@ -26,6 +26,11 @@ const courseSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    courseName: String,
+    isPaid: {
+      type: Boolean,
+      default: false,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId, // Use Types.ObjectId here
       ref: "User",

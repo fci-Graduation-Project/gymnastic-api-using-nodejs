@@ -10,25 +10,50 @@ cloudinary.config({
   api_secret: process.env.API_Secret,
 });
 
-const multerOptions = () => {
-  const upload = multer({
+// const multerOptions = () => {
+//   const upload = multer({
+//     storage: multer.diskStorage({}), // Use disk storage (default)
+//     fileFilter: (req, file, cb) => {
+//       // Check file type
+//       if (!file.mimetype.startsWith("image")) {
+//         // console.log(req.file);
+//         return cb(new ApiError("Only image files are allowed!"), false);
+//       }
+//       cb(null, true);
+//     },
+//   });
+//   return upload;
+// };
+
+const multerOptions = (fileType) => {
+  return multer({
     storage: multer.diskStorage({}), // Use disk storage (default)
     fileFilter: (req, file, cb) => {
       // Check file type
-      if (!file.mimetype.startsWith("image")) {
-        // console.log(req.file);
-        return cb(new ApiError("Only image files are allowed!"), false);
+      if (!file.mimetype.startsWith(fileType)) {
+        return cb(new ApiError(`Only ${fileType} files are allowed!`), false);
       }
       cb(null, true);
     },
   });
-  return upload;
 };
 
-exports.uploadSingleImage = (fieldName) => multerOptions().single(fieldName);
+// Upload a single image
+exports.uploadSingleImage = (fieldName) =>
+  multerOptions("image").single(fieldName);
 
+// Upload a mix of images
 exports.uploadMixOfImages = (arrayOfFields) =>
-  multerOptions().fields(arrayOfFields);
+  multerOptions("image").fields(arrayOfFields);
+
+// Upload a single video
+exports.uploadSingleVideo = (fieldName) =>
+  multerOptions("video").single(fieldName);
+
+// exports.uploadSingleImage = (fieldName) => multerOptions().single(fieldName);
+
+// exports.uploadMixOfImages = (arrayOfFields) =>
+//   multerOptions().fields(arrayOfFields);
 
 // exports.resizeVideo = asyncHandler(async (req, res, next) => {
 //   const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;

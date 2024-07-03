@@ -48,6 +48,8 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
     course = await Course.create({
       coach: req.user._id,
       user,
+      courseName: req.body.courseName,
+      isPaid: true,
       courseItems: [{ exercise: ExerciseId }],
     });
     // console.log(course);
@@ -234,35 +236,35 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 // @desc    This webhook will run when stripe payment success paid
 // @route   POST /webhook-checkout
 // @access  Protected/User
-exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
-  const sig = req.headers["stripe-signature"];
+// exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
+//   const sig = req.headers["stripe-signature"];
 
-  let event;
+//   let event;
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-  if (event.type === "checkout.session.completed") {
-    //  Create order
-    const exerciseId = event.data.object.client_reference_id;
-    const exercise = await Exercise.findById(exerciseId);
-    const coach = await User.findById(exercise.coach);
-    const user = await User.findOne({
-      email: event.data.object.customer_email,
-    });
-    console.log(exercise);
-    console.log(coach);
-    console.log(user);
-    coach.Trainees.push(user._id);
-    await coach.save();
-    console.log(coach.Trainees.push(user._id));
-  }
+//   try {
+//     event = stripe.webhooks.constructEvent(
+//       req.body,
+//       sig,
+//       process.env.STRIPE_WEBHOOK_SECRET
+//     );
+//   } catch (err) {
+//     return res.status(400).send(`Webhook Error: ${err.message}`);
+//   }
+//   if (event.type === "checkout.session.completed") {
+//     //  Create order
+//     const exerciseId = event.data.object.client_reference_id;
+//     const exercise = await Exercise.findById(exerciseId);
+//     const coach = await User.findById(exercise.coach);
+//     const user = await User.findOne({
+//       email: event.data.object.customer_email,
+//     });
+//     console.log(exercise);
+//     console.log(coach);
+//     console.log(user);
+//     coach.Trainees.push(user._id);
+//     await coach.save();
+//     console.log(coach.Trainees.push(user._id));
+//   }
 
-  res.status(200).json({ received: true });
-});
+//   res.status(200).json({ received: true });
+// });
