@@ -238,12 +238,9 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       const course = await Course.create({
         user: user._id,
         coach: coach._id,
-        // courseName: req.body.courseName,
         isPaid: true,
-        // courseItems: [{ exercise: ExerciseId }],
       });
       console.log(course);
-      // await course.save();
       await coach.save();
     }
   }

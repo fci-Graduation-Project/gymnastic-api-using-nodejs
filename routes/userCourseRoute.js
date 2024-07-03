@@ -3,7 +3,9 @@ const express = require("express");
 const {
   addExerciseToCourse,
   getLoggedUserCourse,
+  getExercise,
   updateCourseItemFinished,
+  updateCourseName,
   removeSpecificCourseItem,
   clearCourse,
   checkoutSession,
@@ -32,5 +34,7 @@ router
   .route("/:itemId")
   .put(updateCourseItemFinished)
   .delete(removeSpecificCourseItem);
+router.route("/courseName/:id").put(updateCourseName);
+router.route("/allExercise").get(getExercise);
 
 module.exports = router;

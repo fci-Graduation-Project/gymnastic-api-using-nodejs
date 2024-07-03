@@ -2,6 +2,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
+const factory = require("./handlersFactory");
 
 const Exercise = require("../models/privateCourseModel");
 const Course = require("../models/userCourseModel");
@@ -232,39 +233,5 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
   // await coach.save(); // 4) send session to response
   res.status(200).json({ status: "success", session });
 });
-
-// @desc    This webhook will run when stripe payment success paid
-// @route   POST /webhook-checkout
-// @access  Protected/User
-// exports.webhookCheckouts = asyncHandler(async (req, res, next) => {
-//   const sig = req.headers["stripe-signature"];
-
-//   let event;
-
-//   try {
-//     event = stripe.webhooks.constructEvent(
-//       req.body,
-//       sig,
-//       process.env.STRIPE_WEBHOOK_SECRET
-//     );
-//   } catch (err) {
-//     return res.status(400).send(`Webhook Error: ${err.message}`);
-//   }
-//   if (event.type === "checkout.session.completed") {
-//     //  Create order
-//     const exerciseId = event.data.object.client_reference_id;
-//     const exercise = await Exercise.findById(exerciseId);
-//     const coach = await User.findById(exercise.coach);
-//     const user = await User.findOne({
-//       email: event.data.object.customer_email,
-//     });
-//     console.log(exercise);
-//     console.log(coach);
-//     console.log(user);
-//     coach.Trainees.push(user._id);
-//     await coach.save();
-//     console.log(coach.Trainees.push(user._id));
-//   }
-
-//   res.status(200).json({ received: true });
-// });
+exports.updateCourseName = factory.updateOne(Course);
+exports.getExercise = factory.getAll(Exercise);
