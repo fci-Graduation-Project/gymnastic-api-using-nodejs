@@ -19,7 +19,7 @@ router.use(
   authService.allowedTo("admin", "coach", "user")
 );
 router.get(
-  "/checkout-session/:exerciseId",
+  "/checkout-session/:courseId",
   authService.allowedTo("user"),
   checkoutSession
 );

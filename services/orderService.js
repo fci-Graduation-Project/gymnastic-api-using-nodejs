@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
 const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
-const Exercise = require("../models/privateCourseModel");
+// const Exercise = require("../models/privateCourseModel");
 const Product = require("../models/productModel");
 const Cart = require("../models/cartModel");
 const Order = require("../models/orderModel");
@@ -228,22 +228,29 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
       createCardOrder(event.data.object);
       // console.log(exercise);
     } else {
-      const exerciseId = event.data.object.client_reference_id;
-      const exercise = await Exercise.findById(exerciseId);
-      const coach = await User.findById(exercise.coach);
+      const courseId = event.data.object.client_reference_id;
+      const course = await Course.findById(courseId);
+      const coach = await User.findById(course.coach);
       const user = await User.findOne({
         email: event.data.object.customer_email,
       });
+      course.isPaid = true;
+      await course.save();
       coach.Trainees.push(user._id);
-      const course = await Course.create({
-        user: user._id,
-        coach: coach._id,
-        isPaid: true,
-      });
       console.log(course);
       await coach.save();
+
+      //     const course1 = await Course.findByIdAndUpdate(
+      //       {
+      //         courseId,
+      //         isPaid: true,
+      //       },
+      //       { new: true }
+      //     );
+      //     console.log(course1);
+      //     // await course1.save();
+      //   }
     }
   }
-
   res.status(200).json({ received: true });
 });

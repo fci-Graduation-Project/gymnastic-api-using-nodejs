@@ -21,9 +21,6 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
     "privateExercises._id": ExerciseId,
   });
   // console.log(exercise);
-  // console.log(exercise.coach.toString());
-  // console.log(req.user._id.toString());
-  // console.log(req.user._id.toString());
   if (!exercise) {
     return next(
       new ApiError(`There is no exercise with id ${ExerciseId} `, 404)
@@ -35,24 +32,40 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
       new ApiError(`you not owner this exercise to add ${ExerciseId} `, 404)
     );
   }
+
+  const exerciseIndex = exercise.privateExercises.findIndex(
+    (item) => item._id.toString() === ExerciseId
+  );
+  console.log("index" + exerciseIndex);
+  const a = exercise.privateExercises[exerciseIndex];
+
   let course = await Course.findOne({ coach: req.user._id, user });
-  console.log(course);
-  // console.log(course.coach);
-  // console.log(!(course.coach.toString() & user));
-  // console.log(!course);
-  // console.log(!course && !(course.coach.toString() & user));
-  // if (course.coach.toString() !== req.user._id.toString()) {
-  //   return next(new ApiError(`You are not allow to add here `, 404));
-  // }
+  // console.log(course);
+
   if (!course) {
-    // create cart fot logged user with product
     course = await Course.create({
       coach: req.user._id,
       user,
+      price: exercise.Price,
       courseName: req.body.courseName,
-      isPaid: true,
-      courseItems: [{ exercise: ExerciseId }],
+      courseItems: [
+        {
+          exercise: ExerciseId,
+          trainingName: a.trainingName,
+          count: a.count,
+          time: a.time,
+          videoUrl: a.videoUrl,
+          imageCover: a.imageCover,
+          animationUrl: a.animationUrl,
+          description: a.description,
+          focusArea: a.focusArea,
+          finished: false,
+          percentage: 0,
+          time: new Date(),
+        },
+      ],
     });
+
     // console.log(course);
   } else {
     // product exist in cart, update product quantity
@@ -65,13 +78,23 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
         new ApiError(`this id exist in courseItems  ${ExerciseId} `, 404)
       );
     } else {
-      course.courseItems.push({ exercise: ExerciseId });
+      course.courseItems.push({
+        exercise: ExerciseId,
+        trainingName: a.trainingName,
+        count: a.count,
+        time: a.time,
+        videoUrl: a.videoUrl,
+        imageCover: a.imageCover,
+        animationUrl: a.animationUrl,
+        description: a.description,
+        focusArea: a.focusArea,
+        finished: false,
+        percentage: 0,
+        time: new Date(),
+      });
     }
   }
   await course.save();
-  // Calculate total cart price
-  // calcTotalCartPrice(cart);/
-  // await cart.save();
 
   res.status(200).json({
     status: "success",
@@ -85,12 +108,12 @@ exports.addExerciseToCourse = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/cart
 // @access  Private/User
 exports.getLoggedUserCourse = asyncHandler(async (req, res, next) => {
-  const course = await Course.find({ user: req.user._id });
+  const course = await Course.findOne({ user: req.user._id });
   // .populate({
   //   path: "courseItems.exercise",
   //   // model: "Exercise", // Ensure this matches your PrivateCourse model name
   // });
-  // console.log(course);
+  console.log(course.courseItems);
   if (!course) {
     return next(
       new ApiError(`There is no course for this user id: ${req.user._id}`, 404)
@@ -192,16 +215,17 @@ exports.updateCourseItemFinished = asyncHandler(async (req, res, next) => {
 
 exports.checkoutSession = asyncHandler(async (req, res, next) => {
   // 1) Get cart depend on cartId
-  const exercise = await Exercise.findById(req.params.exerciseId);
-  if (!exercise) {
+  const course = await Course.findById(req.params.courseId);
+  // console.log(course);
+  if (!course) {
     return next(
       new ApiError(
-        `There is no such course with id ${req.params.exerciseId}`,
+        `There is no such course with id ${req.params.courseId}`,
         404
       )
     );
   }
-  console.log(exercise.Price);
+  // console.log(exercise.Price);
   // 3) Create stripe checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
@@ -212,7 +236,8 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
           product_data: {
             name: req.user.name,
           },
-          unit_amount: exercise.Price * 100,
+          unit_amount: course.price * 100,
+          // unit_amount: course.courseName,
         },
         quantity: 1,
       },
@@ -221,12 +246,12 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     success_url: `${req.protocol}://${req.get("host")}/exercise`,
     cancel_url: `${req.protocol}://${req.get("host")}/private`,
     customer_email: req.user.email,
-    client_reference_id: req.params.exerciseId,
+    client_reference_id: req.params.courseId,
   });
-  // const exercise1 = await Exercise.findById(req.params.exerciseId);
-  // const coach = await User.findById(exercise1.coach);
+  // const course1 = await Course.findById(req.params.exerciseId);
+  // const coach = await User.findById(course1.coach);
   // const user = await User.findOne({ email: req.user.email });
-  // console.log(exercise1);
+  // console.log(course1);
   // console.log(coach);
   // console.log(user);
   // coach.Trainees.push(user._id);

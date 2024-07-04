@@ -34,16 +34,20 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 // exports.getSectors = factory.getAll(Sector, "Products");
 
 exports.getOnlySectors = asyncHandler(async (req, res, next) => {
-  let query = {};
+  if (req.query.sector && req.query.level && req.query.age) {
+    const sector = req.query.sector;
+    const level = req.query.level;
+    const age = parseInt(req.query.age, 10);
 
-  if (req.query.keyword) {
-    const keyword = parseInt(req.query.keyword, 10);
+    if (!isNaN(age)) {
+      const documents = await Sector.find({
+        sector: sector,
+        level: level,
+      }).select("sector level image age createdAt updatedAt");
 
-    if (!isNaN(keyword)) {
-      const documents = await Sector.find({});
       const filteredDocuments = documents.filter((doc) => {
         const [min, max] = doc.age.split("-").map(Number);
-        return keyword >= min && keyword <= max;
+        return age >= min && age <= max;
       });
 
       if (filteredDocuments.length === 0) {
@@ -54,7 +58,7 @@ exports.getOnlySectors = asyncHandler(async (req, res, next) => {
         .status(200)
         .json({ count: filteredDocuments.length, data: filteredDocuments });
     } else {
-      return next(new ApiError("Invalid keyword format", 400));
+      return next(new ApiError("Invalid age format", 400));
     }
   } else {
     const documents = await Sector.find(req.query).select(
@@ -67,6 +71,7 @@ exports.getOnlySectors = asyncHandler(async (req, res, next) => {
     res.status(200).json({ count: documents.length, data: documents });
   }
 });
+
 exports.getSectors = asyncHandler(async (req, res, next) => {
   let query = {};
 

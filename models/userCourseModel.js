@@ -8,6 +8,15 @@ const courseSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId, // Use Types.ObjectId here
           ref: "PrivateCourse", // Reference the model name of PrivateCourse
         },
+        trainingName: String,
+        count: Number,
+        time: Number,
+        videoUrl: String,
+        imageCover: String,
+        animationUrl: String,
+        description: String,
+        focusArea: [String],
+
         finished: {
           type: Boolean,
           default: false,
@@ -27,6 +36,7 @@ const courseSchema = new mongoose.Schema(
       default: 0,
     },
     courseName: String,
+    price: Number,
     isPaid: {
       type: Boolean,
       default: false,
