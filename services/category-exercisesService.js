@@ -1,6 +1,7 @@
 const factory = require("./handlersFactory");
 const asyncHandler = require("express-async-handler");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
+const ApiError = require("../utils/apiError");
 const cloudinary = require("cloudinary").v2;
 const Sector = require("../models/category-exercisesModel");
 
@@ -34,78 +35,79 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 // exports.getSectors = factory.getAll(Sector, "Products");
 
 exports.getOnlySectors = asyncHandler(async (req, res, next) => {
-  if (req.query.sector && req.query.level && req.query.age) {
-    const sector = req.query.sector;
-    const level = req.query.level;
-    const age = parseInt(req.query.age, 10);
+  const { sector, level, age } = req.query;
 
-    if (!isNaN(age)) {
-      const documents = await Sector.find({
-        sector: sector,
-        level: level,
-      }).select("sector level image age createdAt updatedAt");
-
-      const filteredDocuments = documents.filter((doc) => {
-        const [min, max] = doc.age.split("-").map(Number);
-        return age >= min && age <= max;
-      });
-
-      if (filteredDocuments.length === 0) {
-        return next(new ApiError("No documents found", 404));
-      }
-
-      return res
-        .status(200)
-        .json({ count: filteredDocuments.length, data: filteredDocuments });
-    } else {
+  // Validate the age if it's provided
+  let parsedAge;
+  if (age) {
+    parsedAge = parseInt(age, 10);
+    if (isNaN(parsedAge)) {
       return next(new ApiError("Invalid age format", 400));
     }
-  } else {
-    const documents = await Sector.find(req.query).select(
-      "sector level image age createdAt updatedAt"
-    );
-    if (documents.length === 0) {
-      return next(new ApiError("No documents found", 404));
-    }
-
-    res.status(200).json({ count: documents.length, data: documents });
   }
+
+  // Build the query object dynamically based on the provided query parameters
+  const query = {};
+  if (sector) query.sector = sector;
+  if (level) query.level = level;
+
+  // Find the documents based on sector and/or level
+  let documents = await Sector.find(query).select(
+    "sector level image age createdAt updatedAt"
+  );
+
+  // Filter documents based on age if it's provided
+  if (age) {
+    documents = documents.filter((doc) => {
+      const [min, max] = doc.age.split("-").map(Number);
+      return parsedAge >= min && parsedAge <= max;
+    });
+  }
+
+  // Handle the case where no documents are found
+  if (documents.length === 0) {
+    return next(new ApiError("No documents found", 404));
+  }
+
+  // Respond with the filtered documents
+  res.status(200).json({ count: documents.length, data: documents });
 });
 
 exports.getSectors = asyncHandler(async (req, res, next) => {
-  let query = {};
+  const { sector, level, age } = req.query;
 
-  if (req.query.keyword) {
-    const keyword = parseInt(req.query.keyword, 10);
-
-    if (!isNaN(keyword)) {
-      const documents = await Sector.find({});
-      const filteredDocuments = documents.filter((doc) => {
-        const [min, max] = doc.age.split("-").map(Number);
-        return keyword >= min && keyword <= max;
-      });
-
-      if (filteredDocuments.length === 0) {
-        return next(new ApiError("No documents found", 404));
-      }
-
-      return res
-        .status(200)
-        .json({ count: filteredDocuments.length, data: filteredDocuments });
-    } else {
-      return next(new ApiError("Invalid keyword format", 400));
+  // Validate the age if it's provided
+  let parsedAge;
+  if (age) {
+    parsedAge = parseInt(age, 10);
+    if (isNaN(parsedAge)) {
+      return next(new ApiError("Invalid age format", 400));
     }
-  } else {
-    const documents = await Sector.find(req.query);
-
-    if (documents.length === 0) {
-      return next(new ApiError("No documents found", 404));
-    }
-
-    res.status(200).json({ count: documents.length, data: documents });
   }
-});
 
+  // Build the query object dynamically based on the provided query parameters
+  const query = {};
+  if (sector) query.sector = sector;
+  if (level) query.level = level;
+
+  // Find the documents based on sector and/or level
+  let documents = await Sector.find(query);
+  // Filter documents based on age if it's provided
+  if (age) {
+    documents = documents.filter((doc) => {
+      const [min, max] = doc.age.split("-").map(Number);
+      return parsedAge >= min && parsedAge <= max;
+    });
+  }
+
+  // Handle the case where no documents are found
+  if (documents.length === 0) {
+    return next(new ApiError("No documents found", 404));
+  }
+
+  // Respond with the filtered documents
+  res.status(200).json({ count: documents.length, data: documents });
+});
 // @desc    Get specific Sector by id
 // @route   GET /api/v1/sector/:id
 // @access  Public
